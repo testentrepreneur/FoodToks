@@ -17,8 +17,8 @@ const center = {
   lng: -74.006
 };
 
-// Store the API key in a constant
-const GOOGLE_MAPS_API_KEY = 'YOUR_ACTUAL_API_KEY_HERE';
+// Replace this with your actual API key
+const GOOGLE_MAPS_API_KEY = process.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyDHVVwbXjRQ-IXz4xnlrhsKaFVgZGGZxrY';
 
 const Map = ({ restaurants, onMarkerClick }: MapProps) => {
   const { isLoaded, loadError } = useLoadScript({
