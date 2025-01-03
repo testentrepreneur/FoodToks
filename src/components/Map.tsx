@@ -17,9 +17,12 @@ const center = {
   lng: -74.006
 };
 
+// Store the API key in a constant
+const GOOGLE_MAPS_API_KEY = 'YOUR_ACTUAL_API_KEY_HERE';
+
 const Map = ({ restaurants, onMarkerClick }: MapProps) => {
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY'
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY
   });
 
   if (loadError) return <div>Error loading maps</div>;
