@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import React from 'react';
+import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import { Restaurant } from '@/types';
 
 interface MapProps {
@@ -8,56 +7,59 @@ interface MapProps {
   onMarkerClick: (id: string) => void;
 }
 
+const mapContainerStyle = {
+  width: '100%',
+  height: '100%'
+};
+
+const center = {
+  lat: 40.7128,
+  lng: -74.006
+};
+
 const Map = ({ restaurants, onMarkerClick }: MapProps) => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const markers = useRef<mapboxgl.Marker[]>([]);
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY'
+  });
 
-  useEffect(() => {
-    if (!mapContainer.current) return;
-
-    mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN';
-    
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/light-v11',
-      center: [-74.006, 40.7128], // Default to NYC
-      zoom: 12
-    });
-
-    return () => {
-      map.current?.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!map.current) return;
-
-    // Clear existing markers
-    markers.current.forEach(marker => marker.remove());
-    markers.current = [];
-
-    // Add new markers
-    restaurants.forEach(restaurant => {
-      const el = document.createElement('div');
-      el.className = 'w-8 h-8 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-transform';
-      el.innerHTML = `<span class="text-white text-xs">${restaurant.category[0]}</span>`;
-
-      const marker = new mapboxgl.Marker(el)
-        .setLngLat([restaurant.longitude, restaurant.latitude])
-        .addTo(map.current!);
-
-      el.addEventListener('click', () => {
-        onMarkerClick(restaurant.id);
-      });
-
-      markers.current.push(marker);
-    });
-  }, [restaurants, onMarkerClick]);
+  if (loadError) return <div>Error loading maps</div>;
+  if (!isLoaded) return <div>Loading maps...</div>;
 
   return (
     <div className="relative w-full h-full">
-      <div ref={mapContainer} className="absolute inset-0" />
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        zoom={12}
+        center={center}
+        options={{
+          styles: [
+            {
+              featureType: 'poi',
+              elementType: 'labels',
+              stylers: [{ visibility: 'off' }]
+            }
+          ]
+        }}
+      >
+        {restaurants.map((restaurant) => (
+          <MarkerF
+            key={restaurant.id}
+            position={{
+              lat: restaurant.latitude,
+              lng: restaurant.longitude
+            }}
+            onClick={() => onMarkerClick(restaurant.id)}
+            icon={{
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 10,
+              fillColor: '#1a1a1a',
+              fillOpacity: 1,
+              strokeWeight: 1,
+              strokeColor: '#ffffff',
+            }}
+          />
+        ))}
+      </GoogleMap>
     </div>
   );
 };
