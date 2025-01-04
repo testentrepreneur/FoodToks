@@ -25,12 +25,12 @@ const LocationFilter = ({ selectedCountry, selectedCity, onCountryChange, onCity
         </SelectContent>
       </Select>
 
-      <Select value={selectedCity || ''} onValueChange={(city) => onCityChange(city || null)}>
+      <Select value={selectedCity || 'all'} onValueChange={(city) => onCityChange(city === 'all' ? null : city)}>
         <SelectTrigger className="w-full sm:w-[180px]">
           <SelectValue placeholder="Select city" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All cities</SelectItem>
+          <SelectItem value="all">All cities</SelectItem>
           {cities[selectedCountry as keyof typeof cities]?.map((city) => (
             <SelectItem key={city} value={city}>
               {city}

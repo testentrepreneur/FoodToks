@@ -15,7 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-// Updated mock data with more listings per category and location information
+// Updated mock data with country and city properties for all entries
 const mockRestaurants: Restaurant[] = [
   {
     id: '1',
@@ -82,7 +82,9 @@ const mockRestaurants: Restaurant[] = [
     address: 'Allen Avenue, Ikeja, Lagos',
     phone: '+234 801 234 5678',
     website: 'www.mrbiggs.com',
-    description: 'Popular fast-food restaurant chain known for their meat pies'
+    description: 'Popular fast-food restaurant chain known for their meat pies',
+    country: 'Nigeria',
+    city: 'Lagos'
   },
   {
     id: '5',
@@ -98,7 +100,9 @@ const mockRestaurants: Restaurant[] = [
     address: 'Victoria Island, Lagos',
     phone: '+234 803 456 7890',
     website: 'www.kilimanjaro.com',
-    description: 'Nigerian fast food with a focus on local flavors'
+    description: 'Nigerian fast food with a focus on local flavors',
+    country: 'Nigeria',
+    city: 'Lagos'
   },
   {
     id: '6',
@@ -113,7 +117,9 @@ const mockRestaurants: Restaurant[] = [
     isOpen: true,
     address: 'Maryland, Lagos',
     phone: '+234 806 678 9012',
-    description: 'Quick service local dishes and street food favorites'
+    description: 'Quick service local dishes and street food favorites',
+    country: 'Nigeria',
+    city: 'Lagos'
   }
 ];
 
