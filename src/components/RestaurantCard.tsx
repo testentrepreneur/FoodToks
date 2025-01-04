@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Restaurant } from '@/types';
-import { Star, MapPin, Clock } from 'lucide-react';
+import { Star, MapPin, Clock, Phone, Globe } from 'lucide-react';
 
 interface RestaurantCardProps {
   restaurant: Restaurant;
@@ -27,16 +27,28 @@ const RestaurantCard = ({ restaurant, onClick }: RestaurantCardProps) => {
       </div>
       <div className="p-4">
         <h3 className="font-semibold text-lg mb-1">{restaurant.name}</h3>
-        <p className="text-muted-foreground text-sm mb-2">{restaurant.cuisine}</p>
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm mb-2">{restaurant.category}</p>
+        <div className="space-y-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <MapPin className="w-4 h-4" />
-            {restaurant.distance}km
+            {restaurant.address}
           </div>
           <div className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
             {restaurant.isOpen ? 'Open' : 'Closed'}
           </div>
+          {restaurant.phone && (
+            <div className="flex items-center gap-1">
+              <Phone className="w-4 h-4" />
+              {restaurant.phone}
+            </div>
+          )}
+          {restaurant.website && (
+            <div className="flex items-center gap-1">
+              <Globe className="w-4 h-4" />
+              {restaurant.website}
+            </div>
+          )}
         </div>
       </div>
     </Card>
