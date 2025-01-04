@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Map from '@/components/Map';
 import RestaurantCard from '@/components/RestaurantCard';
 import CategoryFilter from '@/components/CategoryFilter';
 import SearchBar from '@/components/SearchBar';
@@ -43,12 +42,15 @@ const Index = () => {
 
   const filteredRestaurants = mockRestaurants.filter(restaurant => {
     const matchesCategory = !selectedCategory || restaurant.category === selectedCategory;
-    const matchesSearch = restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         restaurant.cuisine.toLowerCase().includes(searchQuery.toLowerCase());
+    const searchTerms = searchQuery.toLowerCase();
+    const matchesSearch = 
+      restaurant.name.toLowerCase().includes(searchTerms) ||
+      restaurant.cuisine.toLowerCase().includes(searchTerms) ||
+      restaurant.category.toLowerCase().includes(searchTerms);
     return matchesCategory && matchesSearch;
   });
 
-  const handleMarkerClick = (id: string) => {
+  const handleRestaurantClick = (id: string) => {
     const restaurant = mockRestaurants.find(r => r.id === id);
     if (restaurant) {
       toast({
@@ -59,32 +61,26 @@ const Index = () => {
   };
 
   return (
-    <div className="h-screen flex">
-      {/* Left panel */}
-      <div className="w-1/3 h-full p-4 overflow-y-auto border-r">
-        <h1 className="text-2xl font-bold mb-4">Discover Places</h1>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-2xl font-bold mb-4">Discover Places</h1>
+      <div className="mb-6">
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
-        <div className="my-4">
-          <CategoryFilter
-            categories={categories}
-            selectedCategory={selectedCategory}
-            onSelectCategory={setSelectedCategory}
-          />
-        </div>
-        <div className="space-y-4">
-          {filteredRestaurants.map(restaurant => (
-            <RestaurantCard
-              key={restaurant.id}
-              restaurant={restaurant}
-              onClick={() => handleMarkerClick(restaurant.id)}
-            />
-          ))}
-        </div>
       </div>
-
-      {/* Map */}
-      <div className="flex-1">
-        <Map restaurants={filteredRestaurants} onMarkerClick={handleMarkerClick} />
+      <div className="mb-6">
+        <CategoryFilter
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+        />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredRestaurants.map(restaurant => (
+          <RestaurantCard
+            key={restaurant.id}
+            restaurant={restaurant}
+            onClick={() => handleRestaurantClick(restaurant.id)}
+          />
+        ))}
       </div>
     </div>
   );
