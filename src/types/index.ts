@@ -1,4 +1,4 @@
-export type Category = 'Restaurants' | 'Fast Food' | 'Local Cuisine' | 'Cafes' | 'Bakeries' | 'Food Delivery';
+export type Category = 'Restaurants' | 'Fast Food' | 'Local Cuisine' | 'Street Foods' | 'Cafes' | 'Bakeries' | 'Food Delivery' | 'Other';
 
 export interface Restaurant {
   id: string;
