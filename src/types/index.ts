@@ -15,4 +15,6 @@ export interface Restaurant {
   phone?: string;
   website?: string;
   description: string;
+  country: string;
+  city: string;
 }

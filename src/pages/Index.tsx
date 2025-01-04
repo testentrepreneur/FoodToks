@@ -3,6 +3,7 @@ import RestaurantCard from '@/components/RestaurantCard';
 import CategoryFilter from '@/components/CategoryFilter';
 import SearchBar from '@/components/SearchBar';
 import AddListingForm from '@/components/AddListingForm';
+import LocationFilter from '@/components/LocationFilter';
 import { Category, Restaurant } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -14,7 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-// Updated mock data with more relevant Nigerian food businesses
+// Updated mock data with more listings per category and location information
 const mockRestaurants: Restaurant[] = [
   {
     id: '1',
@@ -29,7 +30,9 @@ const mockRestaurants: Restaurant[] = [
     isOpen: true,
     address: 'Opebi Road, Ikeja, Lagos',
     phone: '+234 802 345 6789',
-    description: 'Authentic Nigerian street food with daily specials'
+    description: 'Authentic Nigerian street food with daily specials',
+    country: 'Nigeria',
+    city: 'Lagos'
   },
   {
     id: '2',
@@ -44,22 +47,26 @@ const mockRestaurants: Restaurant[] = [
     isOpen: true,
     address: 'Lekki Phase 1, Lagos',
     website: 'www.sweetsensation.com',
-    description: 'Nigerian fast food chain with local and continental options'
+    description: 'Nigerian fast food chain with local and continental options',
+    country: 'Nigeria',
+    city: 'Lagos'
   },
   {
     id: '3',
-    name: "Iya Basira's Amala Spot",
+    name: "Kanta's Local Dishes",
     category: 'Local Cuisine',
-    cuisine: 'Nigerian',
-    rating: 4.9,
-    image: 'https://images.unsplash.com/photo-1567954970774-58d6aa6c50dc',
-    latitude: 6.4550,
-    longitude: 3.3920,
-    distance: 4.2,
+    cuisine: 'Ghanaian',
+    rating: 4.7,
+    image: 'https://images.unsplash.com/photo-1511910849309-0dffb8785146',
+    latitude: 5.6037,
+    longitude: -0.1870,
+    distance: 1.8,
     isOpen: true,
-    address: 'Surulere, Lagos',
-    phone: '+234 805 567 8901',
-    description: 'Famous for traditional amala and gbegiri soup'
+    address: 'Osu, Accra',
+    phone: '+233 24 123 4567',
+    description: 'Traditional Ghanaian dishes in a cozy setting',
+    country: 'Ghana',
+    city: 'Accra'
   },
   {
     id: '4',
@@ -116,17 +123,21 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddListingOpen, setIsAddListingOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState('Nigeria');
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const { toast } = useToast();
 
   const filteredRestaurants = mockRestaurants.filter(restaurant => {
     const matchesCategory = !selectedCategory || restaurant.category === selectedCategory;
+    const matchesCountry = restaurant.country === selectedCountry;
+    const matchesCity = !selectedCity || restaurant.city === selectedCity;
     const searchTerms = searchQuery.toLowerCase();
     const matchesSearch = 
       restaurant.name.toLowerCase().includes(searchTerms) ||
       restaurant.description.toLowerCase().includes(searchTerms) ||
       (restaurant.cuisine?.toLowerCase().includes(searchTerms) || false) ||
       restaurant.category.toLowerCase().includes(searchTerms);
-    return matchesCategory && matchesSearch;
+    return matchesCategory && matchesSearch && matchesCountry && matchesCity;
   });
 
   const handleRestaurantClick = (id: string) => {
@@ -149,12 +160,21 @@ const Index = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <h1 className="text-2xl font-bold">Nigerian Food Directory</h1>
+        <h1 className="text-2xl font-bold">
+          {selectedCity ? `${selectedCity}, ` : ''}{selectedCountry} Food Directory
+        </h1>
         <Button onClick={() => setIsAddListingOpen(true)} className="bg-accent text-accent-foreground w-full md:w-auto">
           <Plus className="mr-2" />
           Add Food Business
         </Button>
       </div>
+      
+      <LocationFilter
+        selectedCountry={selectedCountry}
+        selectedCity={selectedCity}
+        onCountryChange={setSelectedCountry}
+        onCityChange={setSelectedCity}
+      />
       
       <div className="mb-6">
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
