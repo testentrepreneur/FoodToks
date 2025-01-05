@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { supabase } from "@/integrations/supabase/client";
 import Index from "./pages/Index";
+import Pricing from "./pages/Pricing";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/pricing" element={<Pricing />} />
               </Routes>
             </BrowserRouter>
           </TooltipProvider>
