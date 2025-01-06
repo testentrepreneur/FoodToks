@@ -7,18 +7,23 @@ import { Header } from "@/components/ui/header";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
+import { useSessionContext } from "@supabase/auth-helpers-react";
+import { toast } from "sonner";
 
 export default function Register() {
   const navigate = useNavigate();
+  const { session, isLoading } = useSessionContext();
 
   useEffect(() => {
-    // Check if user is already logged in
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        navigate('/');
-      }
-    });
-  }, [navigate]);
+    if (session) {
+      toast.success("Successfully registered!");
+      navigate('/');
+    }
+  }, [session, navigate]);
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -49,8 +54,9 @@ export default function Register() {
                 },
               }}
               providers={[]}
-              theme="light"
+              redirectTo={`${window.location.origin}/`}
               view="sign_up"
+              theme="light"
             />
           </CardContent>
         </Card>
