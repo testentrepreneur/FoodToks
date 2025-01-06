@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button"; // Added Button import
 import { supabase } from "@/integrations/supabase/client";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { FeaturesSection } from "@/components/landing/FeaturesSection";
