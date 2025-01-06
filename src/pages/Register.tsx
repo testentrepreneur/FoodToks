@@ -1,10 +1,12 @@
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/ui/header";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { ArrowLeft } from "lucide-react";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -22,6 +24,14 @@ export default function Register() {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="container max-w-md mx-auto pt-32 px-4">
+        <Button 
+          variant="ghost" 
+          className="mb-4" 
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
         <Card>
           <CardContent className="p-6">
             <h1 className="text-2xl font-bold text-center mb-6">Create an Account</h1>
