@@ -47,6 +47,69 @@ export type Database = {
           },
         ]
       }
+      dietary_preferences: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      dining_styles: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      meal_types: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           channel_id: string
@@ -113,6 +176,66 @@ export type Database = {
           status?: string | null
           updated_at?: string
           username?: string
+        }
+        Relationships: []
+      }
+      restaurants: {
+        Row: {
+          address: string
+          city: string
+          country: string
+          created_at: string
+          description: string | null
+          dietary_preferences: string[] | null
+          dining_styles: string[] | null
+          id: string
+          image_url: string | null
+          latitude: number
+          longitude: number
+          meal_types: string[] | null
+          name: string
+          owner_id: string
+          rating: number | null
+          state: string
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          city: string
+          country: string
+          created_at?: string
+          description?: string | null
+          dietary_preferences?: string[] | null
+          dining_styles?: string[] | null
+          id?: string
+          image_url?: string | null
+          latitude: number
+          longitude: number
+          meal_types?: string[] | null
+          name: string
+          owner_id: string
+          rating?: number | null
+          state: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          city?: string
+          country?: string
+          created_at?: string
+          description?: string | null
+          dietary_preferences?: string[] | null
+          dining_styles?: string[] | null
+          id?: string
+          image_url?: string | null
+          latitude?: number
+          longitude?: number
+          meal_types?: string[] | null
+          name?: string
+          owner_id?: string
+          rating?: number | null
+          state?: string
+          updated_at?: string
         }
         Relationships: []
       }
