@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { FeaturesSection } from "@/components/landing/FeaturesSection";
@@ -9,6 +7,8 @@ import { CTASection } from "@/components/landing/CTASection";
 import { Footer } from "@/components/landing/Footer";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Header } from "@/components/ui/header";
+import { HomeFeed } from "@/components/social/HomeFeed";
+import { AIAssistant } from "@/components/chat/AIAssistant";
 
 export default function Index() {
   const [session, setSession] = useState(null);
@@ -42,32 +42,8 @@ export default function Index() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <h2 className="text-3xl font-bold">Welcome to FoodToks!</h2>
-        <p className="text-muted-foreground">
-          Start exploring food communities or discover local vendors near you.
-        </p>
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-xl font-semibold mb-2">Food Communities</h3>
-              <p className="text-muted-foreground mb-4">
-                Join discussions, share recipes, and connect with fellow food enthusiasts.
-              </p>
-              <Button className="w-full">Browse Communities</Button>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-xl font-semibold mb-2">Local Food Directory</h3>
-              <p className="text-muted-foreground mb-4">
-                Discover authentic food vendors, restaurants, and home chefs near you.
-              </p>
-              <Button className="w-full">Explore Directory</Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      <HomeFeed />
+      <AIAssistant />
     </DashboardLayout>
   );
 }
