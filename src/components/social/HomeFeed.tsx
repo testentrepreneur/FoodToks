@@ -37,7 +37,7 @@ export function HomeFeed() {
 
   const fetchPosts = async () => {
     try {
-      const { data, error } = await supabase
+      const { data: postsData, error } = await supabase
         .from('posts')
         .select(`
           id,
@@ -47,7 +47,8 @@ export function HomeFeed() {
           comments_count,
           shares_count,
           created_at,
-          profiles:user_id (
+          user_id,
+          profiles (
             username,
             avatar_url
           )
@@ -56,13 +57,22 @@ export function HomeFeed() {
         .limit(10);
 
       if (error) throw error;
-      
+
       // Transform the data to match the Post interface
-      const transformedPosts = data?.map(post => ({
-        ...post,
-        user: post.profiles
+      const transformedPosts = postsData?.map(post => ({
+        id: post.id,
+        content: post.content,
+        media_urls: post.media_urls || [],
+        likes_count: post.likes_count || 0,
+        comments_count: post.comments_count || 0,
+        shares_count: post.shares_count || 0,
+        created_at: post.created_at,
+        user: {
+          username: post.profiles?.username || 'Unknown User',
+          avatar_url: post.profiles?.avatar_url || ''
+        }
       })) as Post[];
-      
+
       setPosts(transformedPosts || []);
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -79,7 +89,7 @@ export function HomeFeed() {
         schema: 'public',
         table: 'posts'
       }, payload => {
-        setPosts(current => [payload.new as Post, ...current]);
+        fetchPosts(); // Refetch all posts when a new one is added
       })
       .subscribe();
 
