@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import Directory from "@/pages/Directory";
 import "./App.css";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ function App() {
                 <Route path="/" element={<Index />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/directory" element={<Directory />} />
               </Routes>
             </BrowserRouter>
           </TooltipProvider>

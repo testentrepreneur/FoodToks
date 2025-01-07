@@ -57,8 +57,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       title: "Food Directory",
       icon: <List className="text-primary" />,
       description: "Explore our comprehensive food database",
-      status: "Coming Soon",
-      statusColor: "bg-blue-100 text-blue-700"
+      status: "Beta",
+      statusColor: "bg-purple-100 text-purple-700",
+      path: "/directory"
     },
     {
       title: "Food Marketplace",
@@ -111,6 +112,12 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     }
   ];
 
+  const handleCardClick = (path?: string) => {
+    if (path) {
+      navigate(path);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b">
@@ -147,7 +154,8 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="p-6 border rounded-lg hover:shadow-md transition-shadow bg-card"
+              className="p-6 border rounded-lg hover:shadow-md transition-shadow bg-card cursor-pointer"
+              onClick={() => handleCardClick(feature.path)}
             >
               <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                 {feature.icon}
