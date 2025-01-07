@@ -48,7 +48,7 @@ export function HomeFeed() {
           shares_count,
           created_at,
           user_id,
-          profiles (
+          user:profiles!posts_user_id_fkey (
             username,
             avatar_url
           )
@@ -61,15 +61,15 @@ export function HomeFeed() {
       // Transform the data to match the Post interface
       const transformedPosts = postsData?.map(post => ({
         id: post.id,
-        content: post.content,
+        content: post.content || '',
         media_urls: post.media_urls || [],
         likes_count: post.likes_count || 0,
         comments_count: post.comments_count || 0,
         shares_count: post.shares_count || 0,
         created_at: post.created_at,
         user: {
-          username: post.profiles?.username || 'Unknown User',
-          avatar_url: post.profiles?.avatar_url || ''
+          username: post.user?.username || 'Unknown User',
+          avatar_url: post.user?.avatar_url || ''
         }
       })) as Post[];
 
