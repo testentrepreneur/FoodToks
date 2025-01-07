@@ -5,15 +5,18 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
+import { useSession } from '@supabase/auth-helpers-react';
 
 interface Message {
   id: string;
-  content: string;
+  message: string;
   is_bot: boolean;
   created_at: string;
+  user_id: string;
 }
 
 export function AIAssistant() {
+  const session = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -21,8 +24,10 @@ export function AIAssistant() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetchChatHistory();
-  }, []);
+    if (session?.user) {
+      fetchChatHistory();
+    }
+  }, [session]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -31,9 +36,12 @@ export function AIAssistant() {
   }, [messages]);
 
   const fetchChatHistory = async () => {
+    if (!session?.user) return;
+
     const { data, error } = await supabase
       .from('chat_history')
       .select('*')
+      .eq('user_id', session.user.id)
       .order('created_at', { ascending: true });
 
     if (error) {
@@ -45,12 +53,13 @@ export function AIAssistant() {
   };
 
   const handleSend = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || !session?.user) return;
 
     // Add user message
     const userMessage = {
-      content: input,
+      message: input,
       is_bot: false,
+      user_id: session.user.id,
       created_at: new Date().toISOString(),
     };
 
@@ -66,8 +75,9 @@ export function AIAssistant() {
 
       // Simulate bot response (replace with actual AI integration)
       const botMessage = {
-        content: "I'm here to help! How can I assist you today?",
+        message: "I'm here to help! How can I assist you today?",
         is_bot: true,
+        user_id: session.user.id,
         created_at: new Date().toISOString(),
       };
 
@@ -101,9 +111,9 @@ export function AIAssistant() {
 
           <ScrollArea className="flex-1 p-4">
             <div className="space-y-4" ref={scrollRef}>
-              {messages.map((message, index) => (
+              {messages.map((message) => (
                 <div
-                  key={index}
+                  key={message.id}
                   className={`flex ${
                     message.is_bot ? 'justify-start' : 'justify-end'
                   }`}
@@ -115,7 +125,7 @@ export function AIAssistant() {
                         : 'bg-primary text-primary-foreground'
                     }`}
                   >
-                    {message.content}
+                    {message.message}
                   </div>
                 </div>
               ))}

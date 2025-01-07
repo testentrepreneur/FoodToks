@@ -41,13 +41,16 @@ export function HomeFeed() {
         .from('posts')
         .select(`
           *,
-          user:profiles(username, avatar_url)
+          user:user_id (
+            username,
+            avatar_url
+          )
         `)
         .order('created_at', { ascending: false })
         .limit(10);
 
       if (error) throw error;
-      setPosts(data || []);
+      setPosts(data as Post[] || []);
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {
