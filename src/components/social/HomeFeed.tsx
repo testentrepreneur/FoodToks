@@ -40,8 +40,14 @@ export function HomeFeed() {
       const { data, error } = await supabase
         .from('posts')
         .select(`
-          *,
-          user:user_id (
+          id,
+          content,
+          media_urls,
+          likes_count,
+          comments_count,
+          shares_count,
+          created_at,
+          profiles:user_id (
             username,
             avatar_url
           )
@@ -50,7 +56,14 @@ export function HomeFeed() {
         .limit(10);
 
       if (error) throw error;
-      setPosts(data as Post[] || []);
+      
+      // Transform the data to match the Post interface
+      const transformedPosts = data?.map(post => ({
+        ...post,
+        user: post.profiles
+      })) as Post[];
+      
+      setPosts(transformedPosts || []);
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {
