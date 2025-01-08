@@ -23,11 +23,14 @@ export function StoriesCarousel() {
       .from('stories')
       .select(`
         id,
+        user_id,
         media_url,
         expires_at,
         created_at,
-        user_id,
-        profiles:profiles(username, avatar_url)
+        user:profiles!inner (
+          username,
+          avatar_url
+        )
       `)
       .order('created_at', { ascending: false })
       .limit(20);
@@ -44,8 +47,8 @@ export function StoriesCarousel() {
       expires_at: story.expires_at,
       created_at: story.created_at,
       user: {
-        username: story.profiles?.username || 'Anonymous',
-        avatar_url: story.profiles?.avatar_url || ''
+        username: story.user?.username || 'Anonymous',
+        avatar_url: story.user?.avatar_url || ''
       }
     }));
 
