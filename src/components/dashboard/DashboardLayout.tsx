@@ -40,7 +40,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       description: "Discover personalized food content and updates",
       status: "Beta",
       statusColor: "bg-purple-100 text-purple-700",
-      path: "/"
+      path: "/home"
     },
     {
       title: "Food Entertainment",
@@ -124,6 +124,10 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   const handleCardClick = (path?: string) => {
     if (path) {
+      if (path === '/') {
+        navigate('/home');
+        return;
+      }
       navigate(path);
     }
   };

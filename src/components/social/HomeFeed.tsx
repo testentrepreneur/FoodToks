@@ -5,10 +5,11 @@ import { Bell, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Avatar } from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { PostCreation } from './PostCreation';
 import { PostCard } from './PostCard';
+import { StoriesCarousel } from './StoriesCarousel';
 import { Post } from './types';
 
 export function HomeFeed() {
@@ -16,11 +17,33 @@ export function HomeFeed() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [notificationCount, setNotificationCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [userProfile, setUserProfile] = useState<any>(null);
 
   useEffect(() => {
-    fetchPosts();
-    subscribeToNewPosts();
-  }, []);
+    if (session?.user) {
+      fetchUserProfile();
+      fetchPosts();
+      subscribeToNewPosts();
+    }
+  }, [session]);
+
+  const fetchUserProfile = async () => {
+    if (!session?.user?.id) return;
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', session.user.id)
+      .single();
+
+    if (error) {
+      console.error('Error fetching user profile:', error);
+      return;
+    }
+
+    setUserProfile(data);
+  };
 
   const fetchPosts = async () => {
     try {
@@ -85,13 +108,18 @@ export function HomeFeed() {
 
   return (
     <div className="flex flex-col h-screen">
-      <header className="fixed top-0 left-0 right-0 h-[60px] bg-background border-b z-50">
+      <header className="fixed top-0 left-0 right-0 h-[60px] bg-background/80 backdrop-blur-sm z-50 border-b">
         <div className="container mx-auto px-4 h-full flex items-center justify-between">
-          <Avatar className="h-10 w-10" />
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={userProfile?.avatar_url} />
+            <AvatarFallback>{userProfile?.username?.[0] || '?'}</AvatarFallback>
+          </Avatar>
           <div className="flex-1 max-w-md mx-4">
             <Input
               type="search"
               placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full"
             />
           </div>
@@ -111,6 +139,7 @@ export function HomeFeed() {
       <main className="flex-1 overflow-hidden mt-[60px] mb-[50px]">
         <ScrollArea className="h-full">
           <div className="container mx-auto px-4 py-4">
+            <StoriesCarousel />
             <PostCreation onPostCreated={fetchPosts} />
             <div className="space-y-4">
               {posts.map((post) => (
