@@ -1,32 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useSession } from '@supabase/auth-helpers-react';
 import { supabase } from '@/integrations/supabase/client';
-import { Bell, Search, Plus, Image, Send } from 'lucide-react';
+import { Bell, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-
-interface Post {
-  id: string;
-  content: string;
-  media_urls: string[];
-  likes_count: number;
-  comments_count: number;
-  shares_count: number;
-  created_at: string;
-  user: {
-    username: string;
-    avatar_url: string;
-  };
-}
+import { PostCreation } from './PostCreation';
+import { PostCard } from './PostCard';
+import { Post } from './types';
 
 export function HomeFeed() {
   const session = useSession();
   const [posts, setPosts] = useState<Post[]>([]);
-  const [newPost, setNewPost] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [notificationCount, setNotificationCount] = useState(0);
 
@@ -47,7 +34,6 @@ export function HomeFeed() {
           comments_count,
           shares_count,
           created_at,
-          user_id,
           user:profiles!posts_user_id_fkey (
             username,
             avatar_url
@@ -58,22 +44,7 @@ export function HomeFeed() {
 
       if (error) throw error;
 
-      // Transform the data to match the Post interface
-      const transformedPosts = postsData?.map(post => ({
-        id: post.id,
-        content: post.content || '',
-        media_urls: post.media_urls || [],
-        likes_count: post.likes_count || 0,
-        comments_count: post.comments_count || 0,
-        shares_count: post.shares_count || 0,
-        created_at: post.created_at,
-        user: {
-          username: post.user?.username || 'Unknown User',
-          avatar_url: post.user?.avatar_url || ''
-        }
-      })) as Post[];
-
-      setPosts(transformedPosts || []);
+      setPosts(postsData as Post[]);
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {
@@ -89,7 +60,7 @@ export function HomeFeed() {
         schema: 'public',
         table: 'posts'
       }, payload => {
-        fetchPosts(); // Refetch all posts when a new one is added
+        fetchPosts();
       })
       .subscribe();
 
@@ -98,30 +69,8 @@ export function HomeFeed() {
     };
   };
 
-  const handlePostSubmit = async () => {
-    if (!newPost.trim() || !session?.user) return;
-
-    try {
-      const { error } = await supabase
-        .from('posts')
-        .insert([
-          {
-            content: newPost,
-            user_id: session.user.id,
-          }
-        ]);
-
-      if (error) throw error;
-      setNewPost('');
-      fetchPosts();
-    } catch (error) {
-      console.error('Error creating post:', error);
-    }
-  };
-
   return (
     <div className="flex flex-col h-screen">
-      {/* Header */}
       <header className="fixed top-0 left-0 right-0 h-[60px] bg-background border-b z-50">
         <div className="container mx-auto px-4 h-full flex items-center justify-between">
           <Avatar className="h-10 w-10" />
@@ -145,65 +94,13 @@ export function HomeFeed() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="flex-1 overflow-hidden mt-[60px] mb-[50px]">
         <ScrollArea className="h-full">
           <div className="container mx-auto px-4 py-4">
-            {/* Post Creation */}
-            <Card className="mb-6 p-4">
-              <div className="flex gap-4">
-                <Avatar className="h-10 w-10" />
-                <div className="flex-1">
-                  <Input
-                    placeholder="What's on your mind?"
-                    value={newPost}
-                    onChange={(e) => setNewPost(e.target.value)}
-                    className="mb-2"
-                  />
-                  <div className="flex justify-between items-center">
-                    <Button variant="ghost" size="sm">
-                      <Image className="h-5 w-5 mr-2" />
-                      Add Photo
-                    </Button>
-                    <Button onClick={handlePostSubmit} size="sm">
-                      <Send className="h-4 w-4 mr-2" />
-                      Post
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            {/* Posts Feed */}
+            <PostCreation onPostCreated={fetchPosts} />
             <div className="space-y-4">
               {posts.map((post) => (
-                <Card key={post.id} className="p-4">
-                  <div className="flex items-start gap-3">
-                    <Avatar className="h-8 w-8" />
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-semibold">{post.user?.username}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {new Date(post.created_at).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                      <p className="mt-2">{post.content}</p>
-                      <div className="flex gap-4 mt-4">
-                        <Button variant="ghost" size="sm">
-                          Like ({post.likes_count})
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          Comment ({post.comments_count})
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          Share ({post.shares_count})
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
+                <PostCard key={post.id} post={post} />
               ))}
             </div>
           </div>
