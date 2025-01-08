@@ -11,6 +11,7 @@ import { PostCreation } from './PostCreation';
 import { PostCard } from './PostCard';
 import { StoriesCarousel } from './StoriesCarousel';
 import { Post } from './types';
+import { useToast } from '@/components/ui/use-toast';
 
 export function HomeFeed() {
   const session = useSession();
@@ -19,6 +20,7 @@ export function HomeFeed() {
   const [notificationCount, setNotificationCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [userProfile, setUserProfile] = useState<any>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (session?.user) {
@@ -31,18 +33,59 @@ export function HomeFeed() {
   const fetchUserProfile = async () => {
     if (!session?.user?.id) return;
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', session.user.id)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .maybeSingle();
 
-    if (error) {
-      console.error('Error fetching user profile:', error);
-      return;
+      if (error) {
+        console.error('Error fetching user profile:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load user profile",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // If no profile exists, create one
+      if (!data) {
+        const { data: newProfile, error: createError } = await supabase
+          .from('profiles')
+          .insert([
+            {
+              id: session.user.id,
+              username: session.user.email?.split('@')[0] || 'user',
+              avatar_url: null,
+            },
+          ])
+          .select()
+          .single();
+
+        if (createError) {
+          console.error('Error creating user profile:', createError);
+          toast({
+            title: "Error",
+            description: "Failed to create user profile",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        setUserProfile(newProfile);
+      } else {
+        setUserProfile(data);
+      }
+    } catch (error) {
+      console.error('Error in profile management:', error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
     }
-
-    setUserProfile(data);
   };
 
   const fetchPosts = async () => {
@@ -57,7 +100,7 @@ export function HomeFeed() {
           comments_count,
           shares_count,
           created_at,
-          user:profiles!posts_user_id_fkey (
+          user:profiles!inner (
             username,
             avatar_url
           )
@@ -84,6 +127,11 @@ export function HomeFeed() {
       setPosts(formattedPosts);
     } catch (error) {
       console.error('Error fetching posts:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load posts",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
