@@ -6,29 +6,67 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Avatar } from '@/components/ui/avatar';
+import { useToast } from '@/components/ui/use-toast';
 
 export function PostCreation({ onPostCreated }: { onPostCreated: () => void }) {
   const session = useSession();
   const [newPost, setNewPost] = useState('');
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
+  const [isPosting, setIsPosting] = useState(false);
+  const { toast } = useToast();
 
   const handlePostSubmit = async () => {
     if (!newPost.trim() || !session?.user) return;
 
+    setIsPosting(true);
     try {
+      let mediaUrls: string[] = [];
+
+      if (mediaFile) {
+        const fileExt = mediaFile.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${session.user.id}/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('posts')
+          .upload(filePath, mediaFile);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('posts')
+          .getPublicUrl(filePath);
+
+        mediaUrls = [publicUrl];
+      }
+
       const { error } = await supabase
         .from('posts')
         .insert([
           {
             content: newPost,
             user_id: session.user.id,
+            media_urls: mediaUrls,
           }
         ]);
 
       if (error) throw error;
+
       setNewPost('');
+      setMediaFile(null);
       onPostCreated();
+      toast({
+        title: "Success",
+        description: "Your post has been created successfully.",
+      });
     } catch (error) {
-      console.error('Error creating post:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create post. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsPosting(false);
     }
   };
 
@@ -44,13 +82,15 @@ export function PostCreation({ onPostCreated }: { onPostCreated: () => void }) {
             className="mb-2"
           />
           <div className="flex justify-between items-center">
-            <Button variant="ghost" size="sm">
-              <Image className="h-5 w-5 mr-2" />
-              Add Photo
-            </Button>
-            <Button onClick={handlePostSubmit} size="sm">
+            <Input
+              type="file"
+              accept="image/*"
+              className="max-w-[200px]"
+              onChange={(e) => setMediaFile(e.target.files?.[0] || null)}
+            />
+            <Button onClick={handlePostSubmit} size="sm" disabled={isPosting}>
               <Send className="h-4 w-4 mr-2" />
-              Post
+              {isPosting ? "Posting..." : "Post"}
             </Button>
           </div>
         </div>
