@@ -44,7 +44,21 @@ export function HomeFeed() {
 
       if (error) throw error;
 
-      setPosts(postsData as Post[]);
+      const formattedPosts: Post[] = (postsData || []).map(post => ({
+        id: post.id,
+        content: post.content || '',
+        media_urls: post.media_urls || [],
+        likes_count: post.likes_count || 0,
+        comments_count: post.comments_count || 0,
+        shares_count: post.shares_count || 0,
+        created_at: post.created_at,
+        user: {
+          username: post.user?.username || 'Anonymous',
+          avatar_url: post.user?.avatar_url || ''
+        }
+      }));
+
+      setPosts(formattedPosts);
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {
