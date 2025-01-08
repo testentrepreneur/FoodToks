@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSession } from '@supabase/auth-helpers-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Story } from '@/types/story';
-import { Plus, Camera } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useToast } from '@/components/ui/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -23,11 +22,12 @@ export function StoriesCarousel() {
     const { data, error } = await supabase
       .from('stories')
       .select(`
-        *,
-        user:profiles!stories_user_id_fkey (
-          username,
-          avatar_url
-        )
+        id,
+        media_url,
+        expires_at,
+        created_at,
+        user_id,
+        profiles:profiles(username, avatar_url)
       `)
       .order('created_at', { ascending: false })
       .limit(20);
@@ -37,7 +37,19 @@ export function StoriesCarousel() {
       return;
     }
 
-    setStories(data as Story[]);
+    const formattedStories: Story[] = (data || []).map(story => ({
+      id: story.id,
+      user_id: story.user_id,
+      media_url: story.media_url,
+      expires_at: story.expires_at,
+      created_at: story.created_at,
+      user: {
+        username: story.profiles?.username || 'Anonymous',
+        avatar_url: story.profiles?.avatar_url || ''
+      }
+    }));
+
+    setStories(formattedStories);
   };
 
   const subscribeToStories = () => {

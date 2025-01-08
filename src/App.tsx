@@ -11,31 +11,28 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Directory from "@/pages/Directory";
 import { HomeFeed } from "@/components/social/HomeFeed";
-import "./App.css";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <SessionContextProvider supabaseClient={supabase}>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/directory" element={<Directory />} />
-                <Route path="/home" element={<HomeFeed />} />
-              </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </SessionContextProvider>
-      </QueryClientProvider>
-    </React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <SessionContextProvider supabaseClient={supabase}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/directory" element={<Directory />} />
+              <Route path="/home" element={<HomeFeed />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </SessionContextProvider>
+    </QueryClientProvider>
   );
 }
 
