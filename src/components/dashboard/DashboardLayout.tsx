@@ -61,7 +61,8 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       icon: <Package className="text-primary" />,
       description: "Track and manage your food inventory efficiently",
       status: "Beta",
-      statusColor: "bg-purple-100 text-purple-700"
+      statusColor: "bg-purple-100 text-purple-700",
+      path: "/pantry"
     },
     {
       title: "Food Directory",
@@ -126,6 +127,10 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     if (path) {
       if (path === '/') {
         navigate('/home');
+        return;
+      }
+      if (path === '/pantry') {
+        navigate('/pantry');
         return;
       }
       navigate(path);

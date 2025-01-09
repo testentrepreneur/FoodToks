@@ -11,8 +11,12 @@ export default function Pricing() {
   const [isAnnual, setIsAnnual] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubscribe = () => {
-    navigate("/contact");
+  const handleSubscribe = (tier: string) => {
+    if (tier === "Free") {
+      navigate("/register");
+    } else {
+      navigate("/contact");
+    }
   };
 
   const tiers = [
@@ -89,8 +93,8 @@ export default function Pricing() {
     },
     {
       name: "Lifetime",
-      monthlyPrice: "$149",
-      annualPrice: "$149",
+      monthlyPrice: "$499",
+      annualPrice: "$499",
       description: "Limited time founder pricing - First 100 members only!",
       features: [
         "All Pro Features +",
@@ -107,8 +111,8 @@ export default function Pricing() {
   ];
 
   const compareFeatures = [
-    { name: "Monthly Price", values: ["$0", "$9.99", "$19.99", "$49.99", "$149 One-time"] },
-    { name: "Annual Price", values: ["Free", "$99", "$199", "$499", "$149 One-time"] },
+    { name: "Monthly Price", values: ["$0", "$9.99", "$19.99", "$49.99", "$499 One-time"] },
+    { name: "Annual Price", values: ["Free", "$99", "$199", "$499", "$499 One-time"] },
     { name: "Community Hub", values: ["Basic Access", "Full Access", "Full Access", "Full Access", "Full Access"] },
     { name: "Food Directory", values: ["View Only", "Unlimited Listings", "Unlimited Listings", "Unlimited Listings", "Unlimited Listings"] },
     { name: "Marketplace Access", values: ["View Only", "5 Listings/Month", "Unlimited Listings", "Unlimited + Analytics", "Unlimited + Analytics"] },
@@ -216,7 +220,7 @@ export default function Pricing() {
                     tier.popular ? "" : "bg-background hover:bg-muted"
                   }`}
                   variant={tier.popular || tier.limitedTime ? "default" : "outline"}
-                  onClick={handleSubscribe}
+                  onClick={() => handleSubscribe(tier.name)}
                 >
                   {tier.buttonText}
                 </Button>

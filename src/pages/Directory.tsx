@@ -1,11 +1,15 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Home, Search, MapPin, PlusCircle, Building2, Flag, UserCircle } from "lucide-react";
+import { ArrowLeft, Home, Search, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import DirectoryMenu from '@/components/DirectoryMenu';
 import FeaturedEvents from '@/components/directory/FeaturedEvents';
 import TopRatedRestaurants from '@/components/directory/TopRatedRestaurants';
+import TrendingCuisines from '@/components/directory/TrendingCuisines';
+import NearbyEateries from '@/components/directory/NearbyEateries';
+import FamilyFriendlySpots from '@/components/directory/FamilyFriendlySpots';
+import LateNightEats from '@/components/directory/LateNightEats';
 import FilterSection from '@/components/directory/FilterSection';
 
 export default function Directory() {
@@ -17,7 +21,6 @@ export default function Directory() {
       <div className="sticky top-0 z-50 bg-background border-b">
         <div className="container mx-auto px-4 py-2">
           <div className="flex items-center justify-between gap-4">
-            {/* Left Section */}
             <div className="flex items-center gap-2">
               <Button variant="ghost" onClick={() => navigate(-1)}>
                 <ArrowLeft className="h-5 w-5" />
@@ -27,7 +30,6 @@ export default function Directory() {
               </Button>
             </div>
 
-            {/* Center Section - Search and Location */}
             <div className="flex-1 max-w-2xl flex items-center gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -41,26 +43,9 @@ export default function Directory() {
                 Select Location
               </Button>
             </div>
-
-            {/* Right Section - Actions */}
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon">
-                <PlusCircle className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon">
-                <Building2 className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon">
-                <Flag className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon">
-                <UserCircle className="h-5 w-5" />
-              </Button>
-            </div>
           </div>
         </div>
 
-        {/* Directory Menu */}
         <div className="border-t bg-white">
           <div className="container mx-auto px-4">
             <DirectoryMenu />
@@ -73,6 +58,10 @@ export default function Directory() {
         <FilterSection />
         <FeaturedEvents />
         <TopRatedRestaurants />
+        <TrendingCuisines />
+        <NearbyEateries />
+        <FamilyFriendlySpots />
+        <LateNightEats />
       </div>
     </div>
   );
