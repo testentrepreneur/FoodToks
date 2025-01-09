@@ -6,48 +6,83 @@ import { Check } from "lucide-react";
 export default function Pricing() {
   const tiers = [
     {
-      name: "Starter",
-      price: "Free",
-      description: "Perfect for trying out FoodToks",
+      name: "Free",
+      price: "$0",
+      description: "Perfect for trying the platform!",
       features: [
-        "Join 2 food communities",
-        "Basic recipe search",
-        "Public profile",
-        "Community chat",
-        "Basic analytics",
+        "Community Hub (Basic Features)",
+        "Food Directory (View Listings)",
+        "View Public Marketplace Content",
+        "Basic Pantry Management Tools",
+        "Limited AI Recommendations (5/month)",
+        "Ad-Supported Experience",
       ],
       popular: false,
+      buttonText: "Sign Up for Free",
+    },
+    {
+      name: "Starter",
+      price: "$9.99",
+      period: "/mo",
+      description: "Ideal for casual sellers and small food entrepreneurs!",
+      features: [
+        "Everything in Free +",
+        "Full Community Hub Access",
+        "Unlimited Food Directory Listings",
+        "Advanced Pantry Management Tools",
+        "Unlimited AI Recommendations",
+        "Health & Wellness Analytics",
+      ],
+      popular: false,
+      buttonText: "Get Started",
     },
     {
       name: "Pro",
-      price: "$10",
-      period: "/month",
-      description: "For food enthusiasts and creators",
+      price: "$19.99",
+      period: "/mo",
+      description: "Perfect for growing food businesses!",
       features: [
-        "Everything in Starter, plus:",
-        "Unlimited food communities",
-        "Advanced recipe search",
-        "Priority support",
-        "Custom profile badges",
-        "Advanced analytics",
-        "API access",
+        "Everything in Starter +",
+        "Advanced SEO Tools",
+        "Financial Services Dashboard",
+        "Events & Catering Management",
+        "VIP Customer Support",
+        "Early Access to Beta Features",
       ],
       popular: true,
+      buttonText: "Go Pro",
     },
     {
       name: "Enterprise",
-      price: "Custom",
-      description: "For restaurants and food businesses",
+      price: "$49.99",
+      period: "/mo",
+      description: "Designed for scaling and streamlining operations.",
       features: [
-        "Everything in Pro, plus:",
-        "Custom branding",
-        "Dedicated support",
-        "SLA",
-        "Custom integrations",
-        "Team management",
-        "Advanced security",
+        "Everything in Pro +",
+        "Delivery Management Integration",
+        "Custom Branding Options",
+        "Team Collaboration Tools",
+        "API Access for Business Data",
+        "Dedicated Account Manager",
       ],
       popular: false,
+      buttonText: "Contact Us",
+    },
+    {
+      name: "Lifetime",
+      price: "$149",
+      description: "Limited time founder pricing - First 100 members only!",
+      features: [
+        "All Pro Features +",
+        "Exclusive Lifetime Member Badge",
+        "VIP Priority for Future Features",
+        "Guaranteed Future Upgrades",
+        "No Monthly Payments Ever",
+        "Founder Status Benefits",
+      ],
+      popular: false,
+      buttonText: "Become a Lifetime Member",
+      limitedTime: true,
     },
   ];
 
@@ -57,26 +92,33 @@ export default function Pricing() {
       <main className="flex-grow pt-24 pb-16">
         <div className="text-center space-y-4 mb-12 px-6">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-            Simple, transparent pricing
+            Choose the Perfect Plan for Your Food Journey
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Choose the perfect plan for your food journey. All plans include a 14-day free trial.
+            From casual food lovers to professional vendors, we have a plan that's right for you.
           </p>
         </div>
 
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
             {tiers.map((tier) => (
               <div
                 key={tier.name}
-                className={`relative flex flex-col rounded-3xl ring-1 ring-muted p-8 xl:p-10 ${
+                className={`relative flex flex-col rounded-3xl ring-1 p-8 xl:p-10 ${
                   tier.popular ? "bg-primary/5 ring-primary" : "ring-muted"
-                }`}
+                } ${tier.limitedTime ? "ring-[#9333EA]" : ""}`}
               >
                 {tier.popular && (
                   <div className="absolute -top-5 left-1/2 -translate-x-1/2">
                     <div className="inline-flex items-center rounded-full bg-primary px-4 py-1 text-sm font-medium text-primary-foreground">
                       Most Popular
+                    </div>
+                  </div>
+                )}
+                {tier.limitedTime && (
+                  <div className="absolute -top-5 left-1/2 -translate-x-1/2">
+                    <div className="inline-flex items-center rounded-full bg-[#9333EA] px-4 py-1 text-sm font-medium text-white">
+                      Limited Time
                     </div>
                   </div>
                 )}
@@ -111,15 +153,24 @@ export default function Pricing() {
 
                 <Button
                   className={`mt-8 w-full ${
+                    tier.limitedTime ? "bg-[#9333EA] hover:bg-[#9333EA]/90" :
                     tier.popular ? "" : "bg-background hover:bg-muted"
                   }`}
-                  variant={tier.popular ? "default" : "outline"}
+                  variant={tier.popular || tier.limitedTime ? "default" : "outline"}
                 >
-                  Get started
+                  {tier.buttonText}
                 </Button>
               </div>
             ))}
           </div>
+        </div>
+
+        <div className="mt-24 text-center max-w-3xl mx-auto px-6">
+          <h2 className="text-3xl font-bold mb-4">Why Choose Our Platform?</h2>
+          <p className="text-muted-foreground">
+            Whether you're a food lover, vendor, or business, our plans are tailored to meet your needs. 
+            Unlock the power of AI-driven recommendations, pantry management, and community networking today!
+          </p>
         </div>
       </main>
       <Footer />
