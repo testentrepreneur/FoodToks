@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export function Header() {
+  const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <header className="fixed top-0 w-full bg-background/80 backdrop-blur-sm z-50 border-b">
       <div className="container flex h-16 items-center justify-between">
@@ -10,16 +13,34 @@ export function Header() {
         </Link>
         
         <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">
+          <Link 
+            to="/" 
+            className={`text-sm font-medium transition-colors ${
+              isActive('/') ? 'text-primary' : 'text-foreground hover:text-primary'
+            }`}
+          >
             Home
           </Link>
-          <Link to="/pricing" className="text-sm font-medium hover:text-primary transition-colors">
+          <Link 
+            to="/pricing" 
+            className={`text-sm font-medium transition-colors ${
+              isActive('/pricing') ? 'text-primary' : 'text-foreground hover:text-primary'
+            }`}
+          >
             Pricing
           </Link>
-          <Link to="#features" className="text-sm font-medium hover:text-primary transition-colors">
-            Features
+          <Link 
+            to="/directory" 
+            className={`text-sm font-medium transition-colors ${
+              isActive('/directory') ? 'text-primary' : 'text-foreground hover:text-primary'
+            }`}
+          >
+            Directory
           </Link>
-          <Link to="#about" className="text-sm font-medium hover:text-primary transition-colors">
+          <Link 
+            to="#about" 
+            className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+          >
             About
           </Link>
         </nav>

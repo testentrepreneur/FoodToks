@@ -1,85 +1,128 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Header } from "@/components/ui/header";
 import { Check } from "lucide-react";
+import { CTASection } from "@/components/landing/CTASection";
 
 export default function Pricing() {
   const tiers = [
     {
-      name: "Free",
-      price: "$0",
-      description: "Perfect for getting started",
+      name: "Starter",
+      price: "Free",
+      description: "Perfect for trying out FoodToks",
       features: [
-        "Join unlimited food communities",
-        "Basic vendor search",
+        "Join 2 food communities",
+        "Basic recipe search",
         "Public profile",
-        "Community chat access",
+        "Community chat",
+        "Basic analytics",
       ],
+      popular: false,
     },
     {
       name: "Pro",
-      price: "$9.99",
-      description: "Best for food enthusiasts",
+      price: "$10",
+      period: "/month",
+      description: "For food enthusiasts and creators",
       features: [
-        "All Free features",
-        "Create unlimited food communities",
-        "Advanced vendor search filters",
+        "Everything in Starter, plus:",
+        "Unlimited food communities",
+        "Advanced recipe search",
         "Priority support",
         "Custom profile badges",
-        "Voice channels",
-      ],
-    },
-    {
-      name: "Business",
-      price: "$29.99",
-      description: "For food vendors and businesses",
-      features: [
-        "All Pro features",
-        "Verified vendor badge",
-        "Business analytics",
-        "Priority listing in search",
-        "Marketing tools",
+        "Advanced analytics",
         "API access",
       ],
+      popular: true,
+    },
+    {
+      name: "Enterprise",
+      price: "Custom",
+      description: "For restaurants and food businesses",
+      features: [
+        "Everything in Pro, plus:",
+        "Custom branding",
+        "Dedicated support",
+        "SLA",
+        "Custom integrations",
+        "Team management",
+        "Advanced security",
+      ],
+      popular: false,
     },
   ];
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="container pt-24 pb-16">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h1>
-          <p className="text-xl text-muted-foreground">
-            Choose the perfect plan for your food journey
+      <main className="pt-20 pb-16">
+        <div className="text-center space-y-4 mb-12 px-6">
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+            Simple, transparent pricing
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Choose the perfect plan for your food journey. All plans include a 14-day free trial.
           </p>
         </div>
-        
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {tiers.map((tier) => (
-            <Card key={tier.name} className="flex flex-col">
-              <CardHeader>
-                <CardTitle>{tier.name}</CardTitle>
-                <CardDescription>{tier.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1">
-                <div className="text-3xl font-bold mb-6">{tier.price}<span className="text-lg text-muted-foreground">/month</span></div>
-                <ul className="space-y-3">
-                  {tier.features.map((feature) => (
-                    <li key={feature} className="flex items-center">
-                      <Check className="h-4 w-4 text-primary mr-2" />
-                      <span className="text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full">Get Started</Button>
-              </CardFooter>
-            </Card>
-          ))}
+
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            {tiers.map((tier) => (
+              <div
+                key={tier.name}
+                className={`relative flex flex-col rounded-3xl ring-1 ring-muted p-8 xl:p-10 ${
+                  tier.popular ? "bg-primary/5 ring-primary" : "ring-muted"
+                }`}
+              >
+                {tier.popular && (
+                  <div className="absolute -top-5 left-1/2 -translate-x-1/2">
+                    <div className="inline-flex items-center rounded-full bg-primary px-4 py-1 text-sm font-medium text-primary-foreground">
+                      Most Popular
+                    </div>
+                  </div>
+                )}
+
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold leading-7">{tier.name}</h3>
+                  <div className="mt-4 flex items-baseline">
+                    <span className="text-4xl font-bold tracking-tight">
+                      {tier.price}
+                    </span>
+                    {tier.period && (
+                      <span className="text-muted-foreground ml-1 text-sm font-semibold">
+                        {tier.period}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {tier.description}
+                  </p>
+                </div>
+
+                <div className="flex-1">
+                  <ul role="list" className="space-y-4">
+                    {tier.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-3">
+                        <Check className="h-5 w-5 flex-shrink-0 text-primary" />
+                        <span className="text-sm">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <Button
+                  className={`mt-8 w-full ${
+                    tier.popular ? "" : "bg-background hover:bg-muted"
+                  }`}
+                  variant={tier.popular ? "default" : "outline"}
+                >
+                  Get started
+                </Button>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </main>
+      <CTASection />
     </div>
   );
 }
