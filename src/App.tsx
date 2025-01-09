@@ -11,6 +11,7 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Directory from "@/pages/Directory";
 import { HomeFeed } from "@/components/social/HomeFeed";
+import Pricing from "@/pages/Pricing";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/directory" element={<Directory />} />
               <Route path="/home" element={<HomeFeed />} />
+              <Route path="/pricing" element={<Pricing />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>

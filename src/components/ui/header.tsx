@@ -14,34 +14,12 @@ export function Header() {
         
         <nav className="hidden md:flex items-center space-x-6">
           <Link 
-            to="/" 
-            className={`text-sm font-medium transition-colors ${
-              isActive('/') ? 'text-primary' : 'text-foreground hover:text-primary'
-            }`}
-          >
-            Home
-          </Link>
-          <Link 
             to="/pricing" 
             className={`text-sm font-medium transition-colors ${
               isActive('/pricing') ? 'text-primary' : 'text-foreground hover:text-primary'
             }`}
           >
             Pricing
-          </Link>
-          <Link 
-            to="/directory" 
-            className={`text-sm font-medium transition-colors ${
-              isActive('/directory') ? 'text-primary' : 'text-foreground hover:text-primary'
-            }`}
-          >
-            Directory
-          </Link>
-          <Link 
-            to="#about" 
-            className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-          >
-            About
           </Link>
         </nav>
 

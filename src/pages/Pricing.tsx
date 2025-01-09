@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/ui/header";
+import { Footer } from "@/components/landing/Footer";
 import { Check } from "lucide-react";
-import { CTASection } from "@/components/landing/CTASection";
 
 export default function Pricing() {
   const tiers = [
@@ -52,9 +52,9 @@ export default function Pricing() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      <main className="pt-20 pb-16">
+      <main className="flex-grow pt-24 pb-16">
         <div className="text-center space-y-4 mb-12 px-6">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
             Simple, transparent pricing
@@ -122,7 +122,7 @@ export default function Pricing() {
           </div>
         </div>
       </main>
-      <CTASection />
+      <Footer />
     </div>
   );
 }
