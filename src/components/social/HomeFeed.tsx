@@ -6,11 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 import { PostCreation } from './PostCreation';
 import { PostCard } from './PostCard';
 import { StoriesCarousel } from './StoriesCarousel';
 import { useNavigate } from 'react-router-dom';
+import { Post } from './types';
 
 export function HomeFeed() {
   const [showPostCreation, setShowPostCreation] = useState(false);
@@ -21,6 +22,7 @@ export function HomeFeed() {
   const [searchQuery, setSearchQuery] = useState('');
   const [userProfile, setUserProfile] = useState<any>(null);
   const { toast } = useToast();
+  const session = useSession();
 
   useEffect(() => {
     if (session?.user) {
