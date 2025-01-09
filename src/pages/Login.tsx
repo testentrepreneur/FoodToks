@@ -10,6 +10,7 @@ import { ArrowLeft } from "lucide-react";
 import { useSessionContext } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AuthError, AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export default function Login() {
       navigate('/');
     }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
       if (event === 'SIGNED_IN') {
         toast.success("Successfully signed in!");
         navigate('/');
@@ -35,7 +36,7 @@ export default function Login() {
   }, [session, navigate]);
 
   useEffect(() => {
-    const handleAuthError = (error: Error) => {
+    const handleAuthError = (error: AuthError) => {
       if (error.message.includes('Invalid login credentials')) {
         toast.error("Invalid email or password. Please check your credentials and try again.");
       } else if (error.message.includes('Email not confirmed')) {
@@ -45,7 +46,8 @@ export default function Login() {
       }
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session, error) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
+      const error = (session as any)?.error as AuthError;
       if (error) {
         handleAuthError(error);
       }

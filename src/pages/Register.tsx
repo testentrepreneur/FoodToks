@@ -10,6 +10,7 @@ import { ArrowLeft } from "lucide-react";
 import { useSessionContext } from "@supabase/auth-helpers-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AuthError, AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -21,8 +22,8 @@ export default function Register() {
       navigate('/');
     }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_UP') {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
+      if (event === 'SIGNED_UP' as AuthChangeEvent) {
         toast.success("Successfully registered! Please check your email to verify your account.");
       }
       if (event === 'SIGNED_IN') {
@@ -35,7 +36,7 @@ export default function Register() {
   }, [session, navigate]);
 
   useEffect(() => {
-    const handleAuthError = (error: Error) => {
+    const handleAuthError = (error: AuthError) => {
       if (error.message.includes('Password should be at least 6 characters')) {
         toast.error("Password should be at least 6 characters long.");
       } else if (error.message.includes('Email already registered')) {
@@ -45,7 +46,8 @@ export default function Register() {
       }
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session, error) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
+      const error = (session as any)?.error as AuthError;
       if (error) {
         handleAuthError(error);
       }
