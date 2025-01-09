@@ -1,13 +1,25 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/landing/Footer";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useNavigate } from "react-router-dom";
 
 export default function Pricing() {
+  const [isAnnual, setIsAnnual] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubscribe = () => {
+    navigate("/contact");
+  };
+
   const tiers = [
     {
       name: "Free",
-      price: "$0",
+      monthlyPrice: "$0",
+      annualPrice: "Free",
       description: "Perfect for trying the platform!",
       features: [
         "Community Hub (Basic Features)",
@@ -19,11 +31,13 @@ export default function Pricing() {
       ],
       popular: false,
       buttonText: "Sign Up for Free",
+      limitedTime: false,
     },
     {
       name: "Starter",
-      price: "$9.99",
-      period: "/mo",
+      monthlyPrice: "$9.99",
+      annualPrice: "$99",
+      period: isAnnual ? "/year" : "/mo",
       description: "Ideal for casual sellers and small food entrepreneurs!",
       features: [
         "Everything in Free +",
@@ -35,11 +49,13 @@ export default function Pricing() {
       ],
       popular: false,
       buttonText: "Get Started",
+      limitedTime: false,
     },
     {
       name: "Pro",
-      price: "$19.99",
-      period: "/mo",
+      monthlyPrice: "$19.99",
+      annualPrice: "$199",
+      period: isAnnual ? "/year" : "/mo",
       description: "Perfect for growing food businesses!",
       features: [
         "Everything in Starter +",
@@ -51,11 +67,13 @@ export default function Pricing() {
       ],
       popular: true,
       buttonText: "Go Pro",
+      limitedTime: false,
     },
     {
       name: "Enterprise",
-      price: "$49.99",
-      period: "/mo",
+      monthlyPrice: "$49.99",
+      annualPrice: "$499",
+      period: isAnnual ? "/year" : "/mo",
       description: "Designed for scaling and streamlining operations.",
       features: [
         "Everything in Pro +",
@@ -67,10 +85,12 @@ export default function Pricing() {
       ],
       popular: false,
       buttonText: "Contact Us",
+      limitedTime: false,
     },
     {
       name: "Lifetime",
-      price: "$149",
+      monthlyPrice: "$149",
+      annualPrice: "$149",
       description: "Limited time founder pricing - First 100 members only!",
       features: [
         "All Pro Features +",
@@ -86,6 +106,24 @@ export default function Pricing() {
     },
   ];
 
+  const compareFeatures = [
+    { name: "Monthly Price", values: ["$0", "$9.99", "$19.99", "$49.99", "$149 One-time"] },
+    { name: "Annual Price", values: ["Free", "$99", "$199", "$499", "$149 One-time"] },
+    { name: "Community Hub", values: ["Basic Access", "Full Access", "Full Access", "Full Access", "Full Access"] },
+    { name: "Food Directory", values: ["View Only", "Unlimited Listings", "Unlimited Listings", "Unlimited Listings", "Unlimited Listings"] },
+    { name: "Marketplace Access", values: ["View Only", "5 Listings/Month", "Unlimited Listings", "Unlimited + Analytics", "Unlimited + Analytics"] },
+    { name: "AI Recommendations", values: ["5/Month", "Unlimited", "Unlimited", "Unlimited", "Unlimited"] },
+    { name: "Pantry Management", values: ["Basic Tools", "Advanced Tools", "Advanced Tools", "Advanced Tools", "Advanced Tools"] },
+    { name: "Health & Wellness Analytics", values: [false, true, true, true, true] },
+    { name: "SEO Tools", values: [false, false, "Advanced Tools", "Advanced Tools", "Advanced Tools"] },
+    { name: "Financial Services Dashboard", values: [false, false, true, true, true] },
+    { name: "Events & Catering Management", values: [false, false, true, true, true] },
+    { name: "Delivery Management Integration", values: [false, false, false, true, true] },
+    { name: "VIP Customer Support", values: [false, false, true, true, true] },
+    { name: "Custom Branding for Vendors", values: [false, false, false, true, true] },
+    { name: "Early Access to New Features", values: [false, true, true, true, true] },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
@@ -97,6 +135,27 @@ export default function Pricing() {
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             From casual food lovers to professional vendors, we have a plan that's right for you.
           </p>
+          
+          <div className="flex items-center justify-center gap-4 mt-8">
+            <span className={`text-sm font-medium ${!isAnnual ? 'text-primary' : 'text-muted-foreground'}`}>
+              Monthly
+            </span>
+            <Switch
+              checked={isAnnual}
+              onCheckedChange={setIsAnnual}
+              className="data-[state=checked]:bg-primary"
+            />
+            <div className="flex items-center gap-2">
+              <span className={`text-sm font-medium ${isAnnual ? 'text-primary' : 'text-muted-foreground'}`}>
+                Annual
+              </span>
+              {isAnnual && (
+                <span className="text-sm font-medium text-green-500">
+                  (Save 17%)
+                </span>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -127,7 +186,7 @@ export default function Pricing() {
                   <h3 className="text-lg font-semibold leading-7">{tier.name}</h3>
                   <div className="mt-4 flex items-baseline">
                     <span className="text-4xl font-bold tracking-tight">
-                      {tier.price}
+                      {isAnnual ? tier.annualPrice : tier.monthlyPrice}
                     </span>
                     {tier.period && (
                       <span className="text-muted-foreground ml-1 text-sm font-semibold">
@@ -157,6 +216,7 @@ export default function Pricing() {
                     tier.popular ? "" : "bg-background hover:bg-muted"
                   }`}
                   variant={tier.popular || tier.limitedTime ? "default" : "outline"}
+                  onClick={handleSubscribe}
                 >
                   {tier.buttonText}
                 </Button>
@@ -171,6 +231,44 @@ export default function Pricing() {
             Whether you're a food lover, vendor, or business, our plans are tailored to meet your needs. 
             Unlock the power of AI-driven recommendations, pantry management, and community networking today!
           </p>
+        </div>
+
+        <div className="mt-24 max-w-7xl mx-auto px-6">
+          <h2 className="text-3xl font-bold mb-8 text-center">Compare Plans</h2>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Features</TableHead>
+                  <TableHead>Free</TableHead>
+                  <TableHead>Starter</TableHead>
+                  <TableHead>Pro</TableHead>
+                  <TableHead>Enterprise</TableHead>
+                  <TableHead>Lifetime</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {compareFeatures.map((feature) => (
+                  <TableRow key={feature.name}>
+                    <TableCell className="font-medium">{feature.name}</TableCell>
+                    {feature.values.map((value, index) => (
+                      <TableCell key={index}>
+                        {typeof value === "boolean" ? (
+                          value ? (
+                            <Check className="h-5 w-5 text-primary mx-auto" />
+                          ) : (
+                            <X className="h-5 w-5 text-muted-foreground mx-auto" />
+                          )
+                        ) : (
+                          value
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </main>
       <Footer />
