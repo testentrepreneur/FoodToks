@@ -3,8 +3,9 @@ import { TopNavigation } from './TopNavigation';
 import { BottomNavigation } from './BottomNavigation';
 import { PostList } from './PostList';
 import { AIAssistant } from '../chat/AIAssistant';
+import { Post } from './types';
 
-const mockPosts = [
+const mockPosts: Post[] = [
   {
     id: '1',
     content: 'Delicious homemade sushi rolls! 🍣 #FoodLover #Sushi',

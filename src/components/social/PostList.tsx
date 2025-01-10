@@ -5,7 +5,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { Post } from './types';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-export function PostList() {
+interface PostListProps {
+  initialPosts?: Post[];
+}
+
+export function PostList({ initialPosts = [] }: PostListProps) {
   const { data: posts, isLoading } = useQuery({
     queryKey: ['posts'],
     queryFn: async () => {
@@ -29,6 +33,7 @@ export function PostList() {
       if (error) throw error;
       return data as Post[];
     },
+    initialData: initialPosts,
   });
 
   if (isLoading) {
