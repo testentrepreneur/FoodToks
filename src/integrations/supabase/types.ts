@@ -52,22 +52,28 @@ export type Database = {
           created_at: string
           id: string
           is_bot: boolean | null
+          is_voice_message: boolean | null
           message: string
           user_id: string
+          voice_transcription: string | null
         }
         Insert: {
           created_at?: string
           id?: string
           is_bot?: boolean | null
+          is_voice_message?: boolean | null
           message: string
           user_id: string
+          voice_transcription?: string | null
         }
         Update: {
           created_at?: string
           id?: string
           is_bot?: boolean | null
+          is_voice_message?: boolean | null
           message?: string
           user_id?: string
+          voice_transcription?: string | null
         }
         Relationships: []
       }

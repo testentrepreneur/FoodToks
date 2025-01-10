@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mic, Send, X, Maximize2, Minimize2 } from 'lucide-react';
+import { Mic, Send, X, Maximize2, Minimize2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@supabase/auth-helpers-react';
+import { useToast } from '@/components/ui/use-toast';
 
 interface Message {
   id: string;
@@ -13,15 +14,21 @@ interface Message {
   is_bot: boolean;
   created_at: string;
   user_id: string;
+  is_voice_message?: boolean;
+  voice_transcription?: string;
 }
 
 export function AIAssistant() {
   const session = useSession();
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
 
   useEffect(() => {
     if (session?.user) {
@@ -52,45 +59,123 @@ export function AIAssistant() {
     setMessages(data || []);
   };
 
-  const handleSend = async () => {
-    if (!input.trim() || !session?.user) return;
-
-    // Add user message
-    const userMessage = {
-      message: input,
-      is_bot: false,
-      user_id: session.user.id,
-      created_at: new Date().toISOString(),
-    };
-
+  const startRecording = async () => {
     try {
-      const { error: insertError } = await supabase
-        .from('chat_history')
-        .insert([userMessage]);
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
 
-      if (insertError) throw insertError;
-
-      setInput('');
-      fetchChatHistory();
-
-      // Simulate bot response (replace with actual AI integration)
-      const botMessage = {
-        message: "I'm here to help! How can I assist you today?",
-        is_bot: true,
-        user_id: session.user.id,
-        created_at: new Date().toISOString(),
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
       };
 
-      const { error: botError } = await supabase
-        .from('chat_history')
-        .insert([botMessage]);
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+        await handleVoiceMessage(audioBlob);
+      };
 
-      if (botError) throw botError;
+      mediaRecorder.start();
+      setIsRecording(true);
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+      toast({
+        title: "Error",
+        description: "Could not access microphone. Please check permissions.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const handleVoiceMessage = async (audioBlob: Blob) => {
+    if (!session?.user) return;
+    setIsProcessing(true);
+
+    try {
+      // Convert audio to text using Web Speech API
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      
+      const recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onresult = async (event) => {
+        const transcript = event.results[0][0].transcript;
+        await processMessage(transcript, true);
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        toast({
+          title: "Error",
+          description: "Could not process voice message. Please try again.",
+          variant: "destructive"
+        });
+      };
+
+      recognition.start();
+      audio.play();
+    } catch (error) {
+      console.error('Error processing voice message:', error);
+      toast({
+        title: "Error",
+        description: "Could not process voice message. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const processMessage = async (message: string, isVoice: boolean = false) => {
+    if (!session?.user) return;
+    setIsProcessing(true);
+
+    try {
+      const response = await supabase.functions.invoke('chat-ai', {
+        body: {
+          message,
+          userId: session.user.id,
+          isVoice
+        }
+      });
+
+      if (response.error) throw response.error;
+
+      const { data } = response;
+      
+      if (data.audioUrl && isVoice) {
+        const audio = new Audio(data.audioUrl);
+        audio.play();
+      }
 
       fetchChatHistory();
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error('Error processing message:', error);
+      toast({
+        title: "Error",
+        description: "Could not process message. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessing(false);
+      setInput('');
     }
+  };
+
+  const handleSend = async () => {
+    if (!input.trim() || !session?.user) return;
+    await processMessage(input);
   };
 
   return (
@@ -126,6 +211,9 @@ export function AIAssistant() {
                     }`}
                   >
                     {message.message}
+                    {message.is_voice_message && (
+                      <span className="text-xs ml-2">🎤</span>
+                    )}
                   </div>
                 </div>
               ))}
@@ -137,8 +225,9 @@ export function AIAssistant() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setIsRecording(!isRecording)}
+                onClick={isRecording ? stopRecording : startRecording}
                 className={isRecording ? 'text-red-500' : ''}
+                disabled={isProcessing}
               >
                 <Mic className="h-4 w-4" />
               </Button>
@@ -147,9 +236,18 @@ export function AIAssistant() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                disabled={isProcessing}
               />
-              <Button size="icon" onClick={handleSend}>
-                <Send className="h-4 w-4" />
+              <Button 
+                size="icon" 
+                onClick={handleSend}
+                disabled={isProcessing}
+              >
+                {isProcessing ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
               </Button>
             </div>
           </div>
