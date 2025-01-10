@@ -133,6 +133,10 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         navigate('/pantry');
         return;
       }
+      if (path === '/marketplace') {
+        navigate('/marketplace');
+        return;
+      }
       navigate(path);
     }
   };

@@ -8,7 +8,7 @@ const mockPosts: Post[] = [
   {
     id: '1',
     content: 'Just made this amazing homemade sushi! 🍣 The key is fresh ingredients and patience. Swipe to see the process! #FoodLover #Sushi #Homemade',
-    media_urls: ['/sushi-platter.jpg', '/sushi-making.jpg'],
+    media_urls: ['https://images.unsplash.com/photo-1579871494447-9811cf80d66c'],
     likes_count: 234,
     comments_count: 45,
     shares_count: 12,
@@ -21,7 +21,7 @@ const mockPosts: Post[] = [
   {
     id: '2',
     content: 'Sunday brunch done right! 🥑 Avocado toast with poached eggs and microgreens. Simple but delicious! #BrunchGoals #HealthyEating',
-    media_urls: ['/avocado-toast.jpg'],
+    media_urls: ['https://images.unsplash.com/photo-1525351484163-7529414344d8'],
     likes_count: 567,
     comments_count: 89,
     shares_count: 23,
@@ -34,7 +34,7 @@ const mockPosts: Post[] = [
   {
     id: '3',
     content: 'Made this colorful Buddha bowl for lunch! 🥗 Quinoa, roasted chickpeas, fresh veggies, and tahini dressing. #HealthyFood #VeganRecipes',
-    media_urls: ['/buddha-bowl.jpg'],
+    media_urls: ['https://images.unsplash.com/photo-1512621776951-a57141f2eefd'],
     likes_count: 789,
     comments_count: 56,
     shares_count: 34,
