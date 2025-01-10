@@ -1,8 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Radio, Brain, ShoppingBag, MessageCircle, Settings, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useLocation } from 'react-router-dom';
 
 export function TopNavigation() {
   const navigate = useNavigate();
