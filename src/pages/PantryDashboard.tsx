@@ -82,12 +82,14 @@ export default function PantryDashboard() {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold">Pantry Pulse</h1>
           <div className="flex gap-4">
-            <Input 
-              type="search" 
-              placeholder="Search items..." 
-              className="w-64"
-              startIcon={<Search className="h-4 w-4" />}
-            />
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                type="search" 
+                placeholder="Search items..." 
+                className="w-64 pl-9"
+              />
+            </div>
             <Button className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
               Add Item
