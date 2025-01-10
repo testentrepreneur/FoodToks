@@ -13,6 +13,7 @@ import Directory from "@/pages/Directory";
 import { HomeFeed } from "@/components/social/HomeFeed";
 import Pricing from "@/pages/Pricing";
 import Contact from "@/pages/Contact";
+import PantryDashboard from "@/pages/PantryDashboard";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ function App() {
               <Route path="/home" element={<HomeFeed />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/pantry" element={<PantryDashboard />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>

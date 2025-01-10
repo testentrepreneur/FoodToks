@@ -176,6 +176,51 @@ export type Database = {
           },
         ]
       }
+      pantry_items: {
+        Row: {
+          category: string | null
+          created_at: string
+          estimated_value: number | null
+          expiry_date: string | null
+          id: string
+          low_stock_threshold: number | null
+          name: string
+          purchase_date: string | null
+          quantity: number
+          unit: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          estimated_value?: number | null
+          expiry_date?: string | null
+          id?: string
+          low_stock_threshold?: number | null
+          name: string
+          purchase_date?: string | null
+          quantity?: number
+          unit?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          estimated_value?: number | null
+          expiry_date?: string | null
+          id?: string
+          low_stock_threshold?: number | null
+          name?: string
+          purchase_date?: string | null
+          quantity?: number
+          unit?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       posts: {
         Row: {
           comments_count: number | null

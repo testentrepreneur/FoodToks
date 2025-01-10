@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSession } from '@supabase/auth-helpers-react';
 import { supabase } from '@/integrations/supabase/client';
-import { Home, Search, MessageCircle, Settings, Upload, HomeIcon } from 'lucide-react';
+import { Home, Search, MessageCircle, Settings, Upload, HomeIcon, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -18,7 +18,6 @@ export function HomeFeed() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [notificationCount, setNotificationCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [userProfile, setUserProfile] = useState<any>(null);
   const { toast } = useToast();
@@ -157,26 +156,35 @@ export function HomeFeed() {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col min-h-screen bg-background">
       {/* Top Navigation */}
-      <header className="fixed top-0 left-0 right-0 h-[60px] bg-background/80 backdrop-blur-sm z-50 border-b">
-        <div className="container mx-auto px-4 h-full flex items-center justify-between">
-          <Button variant="ghost" onClick={() => navigate('/')} className="p-2">
-            <HomeIcon className="h-6 w-6" />
-          </Button>
-          <div className="flex-1 max-w-md mx-4">
-            <Input type="search" placeholder="Search..." className="w-full" />
+      <header className="fixed top-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-sm z-50 border-b">
+        <div className="container mx-auto h-full flex items-center justify-between px-4">
+          <div className="flex items-center gap-4">
+            <HomeIcon className="h-6 w-6 text-primary" />
+            <Input 
+              type="search" 
+              placeholder="Search..." 
+              className="w-[200px] md:w-[300px] bg-accent/10"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
-          <Button variant="ghost" className="p-2">
-            <Settings className="h-6 w-6" />
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon">
+              <Bell className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <Settings className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-hidden mt-[60px] mb-[60px]">
+      <main className="flex-1 mt-16 mb-16">
         <ScrollArea className="h-full">
-          <div className="container mx-auto px-4 py-4">
+          <div className="container mx-auto px-4 py-4 max-w-2xl">
             <StoriesCarousel />
             {showPostCreation && (
               <PostCreation onPostCreated={() => {
@@ -194,25 +202,30 @@ export function HomeFeed() {
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 h-[60px] bg-background border-t">
-        <div className="container mx-auto h-full flex items-center justify-around">
-          <Button variant="ghost" onClick={() => navigate('/')} className="p-2">
-            <Home className="h-6 w-6" />
-          </Button>
-          <Button variant="ghost" className="p-2">
-            <Search className="h-6 w-6" />
-          </Button>
-          <Button 
-            variant="ghost" 
-            onClick={() => setShowPostCreation(!showPostCreation)}
-            className="p-2"
-          >
-            <Upload className="h-6 w-6" />
-          </Button>
-          <Button variant="ghost" className="p-2">
-            <MessageCircle className="h-6 w-6" />
-          </Button>
-          <Avatar className="h-8 w-8 cursor-pointer" />
+      <nav className="fixed bottom-0 left-0 right-0 h-16 bg-background border-t">
+        <div className="container mx-auto h-full max-w-2xl">
+          <div className="flex items-center justify-around h-full px-4">
+            <Button variant="ghost" size="icon" className="text-primary">
+              <Home className="h-6 w-6" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <Search className="h-6 w-6" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => setShowPostCreation(!showPostCreation)}
+            >
+              <Upload className="h-6 w-6" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <MessageCircle className="h-6 w-6" />
+            </Button>
+            <Avatar 
+              className="h-8 w-8 cursor-pointer hover:ring-2 hover:ring-primary transition-all"
+              onClick={() => navigate('/profile')}
+            />
+          </div>
         </div>
       </nav>
     </div>

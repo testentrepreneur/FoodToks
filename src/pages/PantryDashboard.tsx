@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/components/ui/use-toast";
+import { useSession } from '@supabase/auth-helpers-react';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   Package, 
   DollarSign, 
@@ -12,10 +15,67 @@ import {
   Bell, 
   Activity,
   Plus,
-  ShoppingCart
+  ShoppingCart,
+  Search
 } from "lucide-react";
 
+interface PantryItem {
+  id: string;
+  name: string;
+  quantity: number;
+  unit: string;
+  category: string;
+  expiry_date: string;
+  estimated_value: number;
+}
+
 export default function PantryDashboard() {
+  const [items, setItems] = useState<PantryItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const session = useSession();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (session) {
+      fetchPantryItems();
+    }
+  }, [session]);
+
+  const fetchPantryItems = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('pantry_items')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setItems(data || []);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load pantry items",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const calculateTotalValue = () => {
+    return items.reduce((sum, item) => sum + (item.estimated_value || 0), 0);
+  };
+
+  const getExpiringItems = () => {
+    const now = new Date();
+    const weekFromNow = new Date();
+    weekFromNow.setDate(weekFromNow.getDate() + 7);
+    
+    return items.filter(item => {
+      const expiryDate = new Date(item.expiry_date);
+      return expiryDate > now && expiryDate <= weekFromNow;
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
@@ -26,6 +86,7 @@ export default function PantryDashboard() {
               type="search" 
               placeholder="Search items..." 
               className="w-64"
+              startIcon={<Search className="h-4 w-4" />}
             />
             <Button className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
@@ -40,10 +101,10 @@ export default function PantryDashboard() {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Total Items</p>
-                <h3 className="text-2xl font-bold mt-1">124</h3>
+                <h3 className="text-2xl font-bold mt-1">{items.length}</h3>
                 <p className="text-xs text-muted-foreground mt-1">Across all categories</p>
               </div>
-              <Package className="h-5 w-5 text-muted-foreground" />
+              <Package className="h-5 w-5 text-primary" />
             </div>
           </Card>
 
@@ -51,10 +112,10 @@ export default function PantryDashboard() {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Total Value</p>
-                <h3 className="text-2xl font-bold mt-1">$1,245</h3>
+                <h3 className="text-2xl font-bold mt-1">${calculateTotalValue()}</h3>
                 <p className="text-xs text-muted-foreground mt-1">Estimated value</p>
               </div>
-              <DollarSign className="h-5 w-5 text-muted-foreground" />
+              <DollarSign className="h-5 w-5 text-primary" />
             </div>
           </Card>
 
@@ -62,32 +123,37 @@ export default function PantryDashboard() {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Categories</p>
-                <h3 className="text-2xl font-bold mt-1">8</h3>
+                <h3 className="text-2xl font-bold mt-1">
+                  {new Set(items.map(item => item.category)).size}
+                </h3>
                 <p className="text-xs text-muted-foreground mt-1">Active categories</p>
               </div>
-              <Grid className="h-5 w-5 text-muted-foreground" />
+              <Grid className="h-5 w-5 text-primary" />
             </div>
           </Card>
 
           <Card className="p-6">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Waste Prevention</p>
-                <h3 className="text-2xl font-bold mt-1">92%</h3>
-                <p className="text-xs text-muted-foreground mt-1">Consumption rate</p>
+                <p className="text-sm text-muted-foreground">Expiring Soon</p>
+                <h3 className="text-2xl font-bold mt-1">{getExpiringItems().length}</h3>
+                <p className="text-xs text-muted-foreground mt-1">Items expiring this week</p>
               </div>
-              <Recycle className="h-5 w-5 text-muted-foreground" />
+              <Clock className="h-5 w-5 text-primary" />
             </div>
           </Card>
         </div>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Sidebar - Categories */}
+          {/* Categories */}
           <Card className="p-6">
-            <h3 className="font-semibold mb-4">All Items</h3>
+            <h3 className="font-semibold mb-4 flex items-center gap-2">
+              <Grid className="h-4 w-4" />
+              Categories
+            </h3>
             <div className="space-y-2">
-              {['Fresh Food', 'Frozen Foods', 'Vegetables', 'Meat', 'Chicken', 'Grains & Rice'].map((category) => (
+              {Array.from(new Set(items.map(item => item.category))).map((category) => (
                 <Button
                   key={category}
                   variant="ghost"
@@ -99,82 +165,46 @@ export default function PantryDashboard() {
             </div>
           </Card>
 
-          {/* Middle Section - Expiring Items */}
+          {/* Expiring Items */}
           <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5" />
-                <h3 className="font-semibold">About to Expire</h3>
-              </div>
-            </div>
+            <h3 className="font-semibold mb-4 flex items-center gap-2">
+              <Clock className="h-4 w-4" />
+              Expiring Soon
+            </h3>
             <div className="space-y-4">
-              {[
-                { name: 'Milk', amount: '1L', days: 1 },
-                { name: 'Yogurt', amount: '500g', days: 3 },
-                { name: 'Fresh Bread', amount: '1 loaf', days: 5 },
-                { name: 'Chicken Breast', amount: '500g', days: 6 }
-              ].map((item) => (
-                <div key={item.name} className="flex items-center justify-between">
+              {getExpiringItems().map((item) => (
+                <div key={item.id} className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">{item.name}</p>
-                    <p className="text-sm text-muted-foreground">{item.amount}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {item.quantity} {item.unit}
+                    </p>
                   </div>
-                  <Badge variant={item.days <= 2 ? 'destructive' : 'secondary'}>
-                    {item.days} days left
+                  <Badge variant="secondary">
+                    Expires {new Date(item.expiry_date).toLocaleDateString()}
                   </Badge>
                 </div>
               ))}
             </div>
           </Card>
 
-          {/* Right Section - Alerts & Activity */}
+          {/* Recent Activity */}
           <div className="space-y-6">
             <Card className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Bell className="h-5 w-5" />
-                  <h3 className="font-semibold">Stock Alerts</h3>
-                </div>
-              </div>
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <Activity className="h-4 w-4" />
+                Recent Activity
+              </h3>
               <div className="space-y-4">
-                {[
-                  { name: 'Rice', amount: '0.5kg of 2kg' },
-                  { name: 'Pasta', amount: '200g of 1kg' }
-                ].map((item) => (
-                  <div key={item.name} className="flex items-center justify-between">
+                {items.slice(0, 5).map((item) => (
+                  <div key={item.id} className="flex items-center justify-between">
                     <div>
                       <p className="font-medium">{item.name}</p>
-                      <p className="text-sm text-muted-foreground">{item.amount}</p>
+                      <p className="text-sm text-muted-foreground">Added recently</p>
                     </div>
                     <Button size="sm" variant="outline">
                       <ShoppingCart className="h-4 w-4 mr-2" />
                       Reorder
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Activity className="h-5 w-5" />
-                  <h3 className="font-semibold">Recent Activity</h3>
-                </div>
-              </div>
-              <div className="space-y-4">
-                {[
-                  { name: 'Olive Oil', action: 'Added', time: '2 days ago' },
-                  { name: 'Tomatoes', action: 'Updated', time: '3 days ago' },
-                  { name: 'Pasta', action: 'Added', time: '5 days ago' }
-                ].map((item) => (
-                  <div key={item.name} className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">{item.name}</p>
-                      <p className="text-sm text-muted-foreground">{item.time}</p>
-                    </div>
-                    <Button size="sm">
-                      Add Again
                     </Button>
                   </div>
                 ))}
