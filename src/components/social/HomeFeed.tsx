@@ -8,8 +8,8 @@ import { Post } from './types';
 const mockPosts: Post[] = [
   {
     id: '1',
-    content: 'Delicious homemade sushi rolls! 🍣 #FoodLover #Sushi',
-    media_urls: ['/sushi-rolls.jpg'],
+    content: 'Just made this amazing homemade sushi! 🍣 The key is fresh ingredients and patience. Swipe to see the process! #FoodLover #Sushi #Homemade',
+    media_urls: ['/sushi-platter.jpg', '/sushi-making.jpg'],
     likes_count: 234,
     comments_count: 45,
     shares_count: 12,
@@ -21,15 +21,28 @@ const mockPosts: Post[] = [
   },
   {
     id: '2',
-    content: 'Perfect Italian pasta with fresh basil 🍝 #ItalianFood #Foodie',
-    media_urls: ['/pasta.jpg'],
+    content: 'Sunday brunch done right! 🥑 Avocado toast with poached eggs and microgreens. Simple but delicious! #BrunchGoals #HealthyEating',
+    media_urls: ['/avocado-toast.jpg'],
     likes_count: 567,
     comments_count: 89,
     shares_count: 23,
     created_at: new Date().toISOString(),
     user: {
-      username: 'pasta_lover',
-      avatar_url: '/chef-avatar-2.jpg'
+      username: 'foodie_adventures',
+      avatar_url: '/foodie-avatar.jpg'
+    }
+  },
+  {
+    id: '3',
+    content: 'Made this colorful Buddha bowl for lunch! 🥗 Quinoa, roasted chickpeas, fresh veggies, and tahini dressing. #HealthyFood #VeganRecipes',
+    media_urls: ['/buddha-bowl.jpg'],
+    likes_count: 789,
+    comments_count: 56,
+    shares_count: 34,
+    created_at: new Date().toISOString(),
+    user: {
+      username: 'plant_based_chef',
+      avatar_url: '/vegan-chef-avatar.jpg'
     }
   }
 ];

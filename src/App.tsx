@@ -15,6 +15,7 @@ import Pricing from "@/pages/Pricing";
 import Contact from "@/pages/Contact";
 import PantryDashboard from "@/pages/PantryDashboard";
 import Marketplace from "@/pages/Marketplace";
+import { AIAssistant } from "@/components/chat/AIAssistant";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ function App() {
               <Route path="/pantry" element={<PantryDashboard />} />
               <Route path="/marketplace" element={<Marketplace />} />
             </Routes>
+            <AIAssistant />
           </BrowserRouter>
         </TooltipProvider>
       </SessionContextProvider>

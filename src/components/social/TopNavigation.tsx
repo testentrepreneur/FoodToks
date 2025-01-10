@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 export function TopNavigation() {
   const navigate = useNavigate();
   const location = useLocation();
-  const showBackButton = location.pathname !== '/home';
+  const showBackButton = location.pathname !== '/';
 
   return (
     <div className="fixed top-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-sm z-50 border-b">
@@ -17,10 +17,11 @@ export function TopNavigation() {
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={() => navigate(-1)}
+              onClick={() => navigate('/')}
               className="flex items-center gap-1"
             >
               <ArrowLeft className="h-5 w-5" />
+              <span className="text-sm">Back</span>
             </Button>
           ) : (
             <>

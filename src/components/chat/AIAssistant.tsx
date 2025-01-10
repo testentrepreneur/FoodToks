@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mic, Send, X, Maximize2, Minimize2, Loader2, MessageCircle } from 'lucide-react';
+import { Mic, Send, X, Minimize2, Loader2, UserRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -184,7 +184,7 @@ export function AIAssistant() {
         <Card className="w-[350px] h-[500px] flex flex-col shadow-lg animate-slide-up">
           <div className="p-4 border-b flex justify-between items-center bg-primary text-primary-foreground">
             <div className="flex items-center gap-2">
-              <MessageCircle className="h-6 w-6" />
+              <UserRound className="h-6 w-6" />
               <h3 className="font-semibold">Rina - Your Food AI Assistant</h3>
             </div>
             <div className="flex gap-2">
@@ -260,7 +260,7 @@ export function AIAssistant() {
           className="rounded-full h-14 w-14 shadow-lg flex items-center justify-center bg-primary text-primary-foreground"
           onClick={() => setIsOpen(true)}
         >
-          <MessageCircle className="h-8 w-8" />
+          <UserRound className="h-8 w-8" />
         </Button>
       )}
     </div>
