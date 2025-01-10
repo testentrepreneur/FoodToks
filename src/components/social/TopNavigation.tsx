@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Radio, Brain, ShoppingBag, MessageCircle, Settings, ArrowLeft } from 'lucide-react';
+import { Tv, Brain, ShoppingBag, MessageCircle, Settings, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function TopNavigation() {
   const navigate = useNavigate();
   const location = useLocation();
-  const showBackButton = location.pathname !== '/';
+  const showBackButton = location.pathname !== '/home';
 
   return (
     <div className="fixed top-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-sm z-50 border-b">
@@ -16,7 +16,7 @@ export function TopNavigation() {
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/home')}
               className="flex items-center gap-1"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -30,7 +30,7 @@ export function TopNavigation() {
                 onClick={() => navigate('/live')}
                 className="flex items-center gap-1"
               >
-                <Radio className="h-5 w-5" />
+                <Tv className="h-5 w-5" />
                 <span className="text-sm">Live</span>
               </Button>
               <Button 
