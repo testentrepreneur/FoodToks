@@ -101,21 +101,21 @@ export function AIAssistant() {
     setIsProcessing(true);
 
     try {
-      // Convert audio to text using Web Speech API
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
       
-      const recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition() as SpeechRecognition;
       recognition.continuous = false;
       recognition.interimResults = false;
 
-      recognition.onresult = async (event) => {
+      recognition.onresult = async (event: SpeechRecognitionEvent) => {
         const transcript = event.results[0][0].transcript;
         await processMessage(transcript, true);
       };
 
       recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
+        console.error('Speech recognition error:', event);
         toast({
           title: "Error",
           description: "Could not process voice message. Please try again.",
