@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Home, Search, MapPin } from "lucide-react";
+import { Search, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import DirectoryMenu from '@/components/DirectoryMenu';
 import FeaturedEvents from '@/components/directory/FeaturedEvents';
@@ -13,23 +12,12 @@ import LateNightEats from '@/components/directory/LateNightEats';
 import FilterSection from '@/components/directory/FilterSection';
 
 export default function Directory() {
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-background">
       {/* Top Navigation Bar */}
       <div className="sticky top-0 z-50 bg-background border-b">
         <div className="container mx-auto px-4 py-2">
           <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" onClick={() => navigate(-1)}>
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" onClick={() => navigate('/')}>
-                <Home className="h-5 w-5" />
-              </Button>
-            </div>
-
             <div className="flex-1 max-w-2xl flex items-center gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
