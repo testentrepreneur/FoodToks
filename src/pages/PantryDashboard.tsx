@@ -6,13 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
 import { useSession } from '@supabase/auth-helpers-react';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
 import { 
   Grid, 
   Clock, 
   Activity,
   Search,
-  ChevronLeft,
   MoreVertical,
   Trash2
 } from "lucide-react";
@@ -40,7 +38,6 @@ export default function PantryDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const session = useSession();
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (session) {
@@ -95,19 +92,9 @@ export default function PantryDashboard() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => navigate('/')}
-            className="mr-2"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold">Pantry Pulse</h1>
-            <p className="text-sm text-muted-foreground">Manage your food inventory</p>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold">Pantry Pulse</h1>
+          <p className="text-sm text-muted-foreground">Manage your food inventory</p>
         </div>
 
         <div className="flex justify-between items-center mb-8">

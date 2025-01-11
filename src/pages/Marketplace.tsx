@@ -1,6 +1,4 @@
 import React from 'react';
-import { TopNavigation } from '@/components/social/TopNavigation';
-import { BottomNavigation } from '@/components/social/BottomNavigation';
 import { Search, Star, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,10 +30,8 @@ export default function Marketplace() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <TopNavigation />
-      <main className="flex-1 mt-16 mb-16 container mx-auto max-w-2xl p-4">
+      <main className="flex-1 container mx-auto max-w-2xl p-4">
         <div className="space-y-6">
-          {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
             <Input
@@ -45,7 +41,6 @@ export default function Marketplace() {
             />
           </div>
           
-          {/* Categories */}
           <div className="flex gap-2 overflow-x-auto pb-2">
             {categories.map((category) => (
               <Button
@@ -111,7 +106,6 @@ export default function Marketplace() {
           </div>
         </div>
       </main>
-      <BottomNavigation />
     </div>
   );
 }

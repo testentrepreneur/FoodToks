@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { SessionContextProvider } from "@supabase/auth-helpers-react";
+import { SessionContextProvider, useSession } from "@supabase/auth-helpers-react";
 import { supabase } from "@/integrations/supabase/client";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import Index from "@/pages/Index";
@@ -21,6 +21,16 @@ import { AIAssistant } from "@/components/chat/AIAssistant";
 
 const queryClient = new QueryClient();
 
+function PrivateRoute({ children }) {
+  const session = useSession();
+  
+  if (!session) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return children;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -28,47 +38,57 @@ function App() {
         <TooltipProvider>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<Navigate to="/home" replace />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route
                 path="/home"
                 element={
-                  <DashboardLayout>
-                    <HomeFeed />
-                  </DashboardLayout>
+                  <PrivateRoute>
+                    <DashboardLayout>
+                      <HomeFeed />
+                    </DashboardLayout>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/directory"
                 element={
-                  <DashboardLayout>
-                    <Directory />
-                  </DashboardLayout>
+                  <PrivateRoute>
+                    <DashboardLayout>
+                      <Directory />
+                    </DashboardLayout>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/pantry"
                 element={
-                  <DashboardLayout>
-                    <PantryDashboard />
-                  </DashboardLayout>
+                  <PrivateRoute>
+                    <DashboardLayout>
+                      <PantryDashboard />
+                    </DashboardLayout>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/marketplace"
                 element={
-                  <DashboardLayout>
-                    <Marketplace />
-                  </DashboardLayout>
+                  <PrivateRoute>
+                    <DashboardLayout>
+                      <Marketplace />
+                    </DashboardLayout>
+                  </PrivateRoute>
                 }
               />
               <Route
                 path="/profile"
                 element={
-                  <DashboardLayout>
-                    <Profile />
-                  </DashboardLayout>
+                  <PrivateRoute>
+                    <DashboardLayout>
+                      <Profile />
+                    </DashboardLayout>
+                  </PrivateRoute>
                 }
               />
               <Route path="/pricing" element={<Pricing />} />
