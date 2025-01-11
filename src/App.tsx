@@ -3,9 +3,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { supabase } from "@/integrations/supabase/client";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
@@ -26,23 +27,57 @@ function App() {
       <SessionContextProvider supabaseClient={supabase}>
         <TooltipProvider>
           <BrowserRouter>
-            <div className="min-h-screen bg-background">
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/directory" element={<Directory />} />
-                <Route path="/home" element={<HomeFeed />} />
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/pantry" element={<PantryDashboard />} />
-                <Route path="/marketplace" element={<Marketplace />} />
-                <Route path="/profile" element={<Profile />} />
-              </Routes>
-              <AIAssistant />
-              <Toaster />
-              <Sonner />
-            </div>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="/home"
+                element={
+                  <DashboardLayout>
+                    <HomeFeed />
+                  </DashboardLayout>
+                }
+              />
+              <Route
+                path="/directory"
+                element={
+                  <DashboardLayout>
+                    <Directory />
+                  </DashboardLayout>
+                }
+              />
+              <Route
+                path="/pantry"
+                element={
+                  <DashboardLayout>
+                    <PantryDashboard />
+                  </DashboardLayout>
+                }
+              />
+              <Route
+                path="/marketplace"
+                element={
+                  <DashboardLayout>
+                    <Marketplace />
+                  </DashboardLayout>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <DashboardLayout>
+                    <Profile />
+                  </DashboardLayout>
+                }
+              />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="*" element={<Navigate to="/home" replace />} />
+            </Routes>
+            <AIAssistant />
+            <Toaster />
+            <Sonner />
           </BrowserRouter>
         </TooltipProvider>
       </SessionContextProvider>
