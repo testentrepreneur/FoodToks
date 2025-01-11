@@ -46,19 +46,18 @@ export default function Marketplace() {
               <Button
                 key={category}
                 variant="secondary"
-                className="whitespace-nowrap"
+                className="whitespace-nowrap hover:bg-[#ff3131]/10 hover:text-[#ff3131]"
               >
                 {category}
               </Button>
             ))}
           </div>
 
-          {/* Action Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {actions.map((action) => (
               <div
                 key={action.title}
-                className="p-6 border rounded-lg hover:shadow-lg transition-shadow cursor-pointer"
+                className="p-6 border rounded-lg hover:shadow-lg transition-shadow cursor-pointer hover:border-[#ff3131]"
               >
                 <h3 className="font-semibold text-lg">{action.title}</h3>
                 <p className="text-muted-foreground">{action.description}</p>
@@ -66,14 +65,13 @@ export default function Marketplace() {
             ))}
           </div>
 
-          {/* Featured Sellers */}
           <div>
             <h2 className="text-lg font-semibold mb-4">Featured Sellers</h2>
             <div className="grid grid-cols-1 gap-4">
               {featuredSellers.map((seller) => (
                 <div
                   key={seller.name}
-                  className="border rounded-lg overflow-hidden"
+                  className="border rounded-lg overflow-hidden hover:border-[#ff3131]"
                 >
                   <div className="aspect-video relative">
                     <img
@@ -86,14 +84,14 @@ export default function Marketplace() {
                     <div className="flex items-center justify-between">
                       <h3 className="font-semibold">{seller.name}</h3>
                       {seller.verified && (
-                        <div className="flex items-center text-sm text-blue-500">
+                        <div className="flex items-center text-sm text-[#ff3131]">
                           <Shield className="w-4 h-4 mr-1" />
                           Verified
                         </div>
                       )}
                     </div>
                     <div className="flex items-center mt-2">
-                      <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                      <Star className="w-4 h-4 text-[#ff3131] fill-[#ff3131]" />
                       <span className="ml-1 text-sm">{seller.rating}</span>
                       <span className="text-sm text-muted-foreground ml-1">
                         ({seller.reviews} reviews)

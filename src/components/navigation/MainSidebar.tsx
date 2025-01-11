@@ -32,7 +32,6 @@ export function MainSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const session = useSession();
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const navigationItems = [
     { icon: Home, label: 'Home', path: '/home' },
@@ -65,21 +64,22 @@ export function MainSidebar() {
 
         <nav className="flex-1 space-y-2">
           {navigationItems.map((item) => (
-            <Button
-              key={item.path}
-              variant={location.pathname === item.path ? "secondary" : "ghost"}
-              className={`w-full justify-start gap-3 text-lg ${
-                location.pathname === item.path ? 'bg-[#ff3131]/10 text-[#ff3131]' : ''
-              } hover:bg-[#ff3131]/10 hover:text-[#ff3131]`}
-              onClick={() => !item.comingSoon && navigate(item.path)}
-              disabled={item.comingSoon}
-            >
-              <item.icon className="h-6 w-6" />
-              <span>{item.label}</span>
+            <div key={item.path} className="flex flex-col">
+              <Button
+                variant={location.pathname === item.path ? "secondary" : "ghost"}
+                className={`w-full justify-start gap-3 text-lg ${
+                  location.pathname === item.path ? 'bg-[#ff3131]/10 text-[#ff3131]' : ''
+                } hover:bg-[#ff3131]/10 hover:text-[#ff3131]`}
+                onClick={() => !item.comingSoon && navigate(item.path)}
+                disabled={item.comingSoon}
+              >
+                <item.icon className="h-6 w-6" />
+                <span>{item.label}</span>
+              </Button>
               {item.comingSoon && (
-                <span className="ml-auto text-xs text-[#ff3131]">Coming Soon</span>
+                <span className="ml-12 -mt-1 text-xs text-[#ff3131]">Coming Soon</span>
               )}
-            </Button>
+            </div>
           ))}
         </nav>
 

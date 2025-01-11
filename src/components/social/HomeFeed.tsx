@@ -53,7 +53,9 @@ export function HomeFeed() {
       <main className="flex-1 container mx-auto max-w-2xl px-4 pt-20 pb-16">
         <PostList posts={mockPosts} />
       </main>
-      <BottomNavigation />
+      <div className="ml-64"> {/* Add margin to account for sidebar */}
+        <BottomNavigation />
+      </div>
     </div>
   );
 }
