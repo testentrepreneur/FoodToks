@@ -15,22 +15,22 @@ export function BottomNavigation() {
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 h-16 bg-background border-t">
-        <div className="container mx-auto h-full max-w-2xl">
-          <div className="flex items-center justify-around h-full px-4">
+      <nav className="fixed bottom-0 left-0 right-0 h-16 bg-background border-t z-50">
+        <div className="h-full max-w-lg mx-auto px-4">
+          <div className="flex items-center justify-around h-full">
             <Button 
               variant="ghost" 
               size="icon"
               onClick={() => navigate('/home')}
-              className={isActive('/home') ? 'text-primary' : ''}
+              className={isActive('/home') ? 'text-[#ff3131]' : ''}
             >
               <Home className="h-6 w-6" />
             </Button>
             <Button 
               variant="ghost" 
               size="icon"
-              onClick={() => navigate('/search')}
-              className={isActive('/search') ? 'text-primary' : ''}
+              onClick={() => navigate('/directory')}
+              className={isActive('/directory') ? 'text-[#ff3131]' : ''}
             >
               <Search className="h-6 w-6" />
             </Button>
@@ -45,7 +45,7 @@ export function BottomNavigation() {
               variant="ghost" 
               size="icon"
               onClick={() => navigate('/favorites')}
-              className={isActive('/favorites') ? 'text-primary' : ''}
+              className={isActive('/favorites') ? 'text-[#ff3131]' : ''}
             >
               <Heart className="h-6 w-6" />
             </Button>
@@ -53,7 +53,7 @@ export function BottomNavigation() {
               variant="ghost" 
               size="icon"
               onClick={() => navigate('/profile')}
-              className={isActive('/profile') ? 'text-primary' : ''}
+              className={isActive('/profile') ? 'text-[#ff3131]' : ''}
             >
               <User className="h-6 w-6" />
             </Button>

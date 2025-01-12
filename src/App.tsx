@@ -18,6 +18,7 @@ import PantryDashboard from "@/pages/PantryDashboard";
 import Marketplace from "@/pages/Marketplace";
 import Profile from "@/pages/Profile";
 import { AIAssistant } from "@/components/chat/AIAssistant";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const queryClient = new QueryClient();
 
@@ -38,7 +39,7 @@ function App() {
         <TooltipProvider>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Navigate to="/home" replace />} />
+              <Route path="/" element={<Index />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route
@@ -93,7 +94,7 @@ function App() {
               />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="*" element={<Navigate to="/home" replace />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
             <AIAssistant />
             <Toaster />

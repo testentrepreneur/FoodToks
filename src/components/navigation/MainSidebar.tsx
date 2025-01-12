@@ -62,9 +62,9 @@ export function MainSidebar() {
           <h1 className="text-3xl font-bold text-[#ff3131]">FoodToks</h1>
         </div>
 
-        <nav className="flex-1 space-y-2">
+        <nav className="flex-1 space-y-1 overflow-y-auto">
           {navigationItems.map((item) => (
-            <div key={item.path} className="flex flex-col">
+            <div key={item.path} className="flex flex-col mb-1">
               <Button
                 variant={location.pathname === item.path ? "secondary" : "ghost"}
                 className={`w-full justify-start gap-3 text-lg ${
@@ -73,11 +73,11 @@ export function MainSidebar() {
                 onClick={() => !item.comingSoon && navigate(item.path)}
                 disabled={item.comingSoon}
               >
-                <item.icon className="h-6 w-6" />
-                <span>{item.label}</span>
+                <item.icon className="h-5 w-5" />
+                <span className="truncate">{item.label}</span>
               </Button>
               {item.comingSoon && (
-                <span className="ml-12 -mt-1 text-xs text-[#ff3131]">Coming Soon</span>
+                <span className="ml-9 text-xs text-[#ff3131]">Coming Soon</span>
               )}
             </div>
           ))}
@@ -101,7 +101,7 @@ export function MainSidebar() {
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56">
-              <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
+              <DropdownMenuItem onClick={handleSignOut} className="text-[#ff3131]">
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
               </DropdownMenuItem>
