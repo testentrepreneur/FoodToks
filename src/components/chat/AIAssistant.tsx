@@ -179,7 +179,7 @@ export function AIAssistant() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-20 md:bottom-4 right-4 z-50">
       {isOpen ? (
         <Card className="w-[350px] h-[500px] flex flex-col shadow-lg animate-slide-up">
           <div className="p-4 border-b flex justify-between items-center bg-primary text-primary-foreground">
